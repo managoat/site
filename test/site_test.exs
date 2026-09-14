@@ -91,6 +91,7 @@ defmodule SiteTest do
 
   test "nginx answers the redirects the build declares" do
     conf = File.read!("nginx.conf")
+    assert conf =~ "absolute_redirect off;"
 
     for {from, to} <- Site.Build.redirects() do
       assert conf =~ "location = #{from} { return 301 #{to}; }"
