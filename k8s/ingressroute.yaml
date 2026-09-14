@@ -17,11 +17,20 @@ spec:
   entryPoints:
     - websecure
   routes:
+    # Each page twice, with and without a trailing slash: Path() is exact, and
+    # nginx sends the slashed form to the clean URL, so both must land here.
     - match: >-
-        Host(`managoat.com`) && (Path(`/`) || Path(`/launch`) || Path(`/oss-launch`) ||
-        Path(`/buzz-launch`) || Path(`/integrations`) || Path(`/built-with`) ||
-        Path(`/self-hosted`) || Path(`/faq`) || Path(`/code-review-bot`) ||
-        PathPrefix(`/case-studies`) || PathPrefix(`/site/`))
+        Host(`managoat.com`) && (Path(`/`) ||
+        Path(`/launch`) || Path(`/launch/`) ||
+        Path(`/oss-launch`) || Path(`/oss-launch/`) ||
+        Path(`/buzz-launch`) || Path(`/buzz-launch/`) ||
+        Path(`/integrations`) || Path(`/integrations/`) ||
+        Path(`/built-with`) || Path(`/built-with/`) ||
+        Path(`/self-hosted`) || Path(`/self-hosted/`) ||
+        Path(`/faq`) || Path(`/faq/`) ||
+        Path(`/code-review-bot`) || Path(`/code-review-bot/`) ||
+        PathPrefix(`/case-studies`) ||
+        PathPrefix(`/site/`))
       kind: Rule
       services:
         - name: managoat-site
