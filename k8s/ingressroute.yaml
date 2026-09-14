@@ -1,0 +1,30 @@
+# The marketing paths of managoat.com, carved out of the app's host rule.
+#
+# The app's IngressRoute (home-cloud, platform/fountain-site) matches the bare
+# Host(); this one matches Host() plus a path list, and Traefik ranks rules by
+# length, so every path named here lands on the site and everything else --
+# /docs, /auth, /dashboard, /api, /terms, /privacy -- stays with the app. The
+# list is the page table in lib/site/build.ex plus /site/ for the assets; add
+# a page there and add it here, or it 404s on the app.
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: managoat-site
+  namespace: managoat-site
+  labels:
+    app: managoat-site
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: >-
+        Host(`managoat.com`) && (Path(`/`) || Path(`/launch`) || Path(`/oss-launch`) ||
+        Path(`/buzz-launch`) || Path(`/integrations`) || Path(`/built-with`) ||
+        Path(`/self-hosted`) || Path(`/faq`) || Path(`/code-review-bot`) ||
+        PathPrefix(`/case-studies`) || PathPrefix(`/site/`))
+      kind: Rule
+      services:
+        - name: managoat-site
+          port: 80
+  tls:
+    secretName: managoat-site-tls
