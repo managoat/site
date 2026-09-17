@@ -62,7 +62,7 @@ defmodule Site.Build do
         template: :integrations,
         title: "Coding agent integrations · #{brand}",
         description:
-          "Run coding agents from your editor, chat app, framework, gateway or code. " <>
+          "Run coding agents from your editor, chat app or code. " <>
             "#{brand} manages ready sandboxes and charges only while agents work."
       },
       %{

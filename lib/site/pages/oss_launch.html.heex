@@ -213,7 +213,7 @@
       Fountain keeps the machine, credentials, agent configuration and live work separate. Change one without rebuilding the rest, then reuse the same setup anywhere your product needs it.
     </p>
   </div>
-  <div class="mt-10 grid sm:grid-cols-2 lg:grid-cols-4 gap-px overflow-hidden rounded-xl border border-[var(--color-border)] bg-[var(--color-border)]">
+  <div class="mt-10 grid sm:grid-cols-2 gap-px overflow-hidden rounded-xl border border-[var(--color-border)] bg-[var(--color-border)]">
     <div :for={primitive <- oss_primitives()} class="bg-[var(--color-bg-1)] p-5">
       <h3 class="font-mono text-xs uppercase tracking-[0.14em] text-[var(--color-accent-ink)]">
         {primitive.name}
@@ -283,10 +283,10 @@
     Talk to it from whatever you are building.
   </h2>
   <p class="mt-4 max-w-2xl text-[var(--color-text-secondary)] leading-relaxed">
-    Use Fountain’s API and SDK in your product. Speak OpenAI-compatible chat from existing tools. Plug into editors over ACP or build a live interface over AG-UI. Every door reaches the same agents, conversations and event stream.
+    Use Fountain’s API and SDKs in your product, or plug into editors and chat apps over ACP. Every door reaches the same agents, conversations and event stream.
   </p>
 
-  <div class="mt-10 grid sm:grid-cols-2 lg:grid-cols-4 gap-px overflow-hidden rounded-xl border border-[var(--color-border)] bg-[var(--color-border)]">
+  <div class="mt-10 grid sm:grid-cols-2 gap-px overflow-hidden rounded-xl border border-[var(--color-border)] bg-[var(--color-border)]">
     <a
       :for={protocol <- client_protocols()}
       href={protocol.docs}

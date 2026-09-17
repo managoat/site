@@ -5,7 +5,7 @@
     Your tools start the agent. {Site.Brand.name()} runs the machine.
   </h1>
   <p class="text-lg sm:text-xl text-[var(--color-text-secondary)] max-w-2xl mx-auto mb-10">
-    Connect your editor, chat app, gateway, framework or code to a coding agent on a ready sandbox. {Site.Brand.name()} provisions the machine, preserves its work between messages and parks it when the agent stops. No machine to manage. No idle time to pay for.
+    Connect your editor, chat app or code to a coding agent on a ready sandbox. {Site.Brand.name()} provisions the machine, preserves its work between messages and parks it when the agent stops. No machine to manage. No idle time to pay for.
   </p>
   <div class="flex flex-col sm:flex-row gap-3 justify-center mb-8">
     <a
@@ -76,7 +76,7 @@
 <%!-- Client protocols --%>
 <section class="max-w-5xl mx-auto px-6 py-16">
   <h2 class="text-2xl font-semibold text-[var(--color-text-primary)] mb-3 text-center">
-    Connect to the same agent four ways.
+    Connect to the same agent from an editor or from code.
   </h2>
   <p class="text-center text-[var(--color-text-secondary)] max-w-xl mx-auto mb-12">
     Whether a prompt starts in an editor, a chat app or your code, {Site.Brand.name()} runs the agent in its sandbox. The machine parks between messages and wakes with its files and work intact.
@@ -84,6 +84,26 @@
   <div class="space-y-6">
     <.protocol_card :for={protocol <- client_protocols()} protocol={protocol} />
   </div>
+  <%!-- The two cards that used to sit here. Their anchors stay so an old link
+        lands on the explanation, and the loss is stated rather than implied:
+        nothing native lets a stock client connect with no code. --%>
+  <p
+    id="openai"
+    class="mt-10 text-center text-sm text-[var(--color-text-muted)] max-w-2xl mx-auto scroll-mt-6"
+    data-role="retired-protocols"
+  >
+    <span id="agui"></span>
+    {Site.Brand.name()} no longer serves the
+    <a
+      href="/docs/integrations/openai-compatible"
+      class="underline underline-offset-2 hover:text-[var(--color-text-primary)]"
+    >OpenAI-compatible API</a>
+    or <a
+      href="/docs/integrations/openbot"
+      class="underline underline-offset-2 hover:text-[var(--color-text-primary)]"
+    >AG-UI</a>.
+    Changing a base URL does not move a client that used them. Each page says what to build on instead, and how to keep a thread you already have.
+  </p>
 </section>
 
 <%!-- Tools --%>
@@ -172,7 +192,7 @@
     Haven't found your tool?
   </h2>
   <p class="text-[var(--color-text-secondary)] mb-8 max-w-lg mx-auto">
-    If it accepts an OpenAI-compatible base URL, launches an ACP agent or hosts AG-UI, it can connect directly. Otherwise, build against {Site.Brand.name()}'s REST API or TypeScript SDK.
+    If it launches an ACP agent, it can connect directly. Otherwise, build against {Site.Brand.name()}'s REST API or an SDK.
   </p>
   <div class="flex flex-col sm:flex-row gap-3 justify-center">
     <a
