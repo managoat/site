@@ -33,69 +33,40 @@
 
 <%!-- Hero --%>
 <section class="max-w-5xl mx-auto px-6 py-12 text-center" data-role="hero">
-  <%!-- On a branded hosted site, say what this is before the pitch. The engine
-        is open source and nothing is held back from it (ADR 0034), so a reader
-        who will never use the hosted product learns that in the first line
-        rather than at the bottom of the page. --%>
+  <%!-- Lead with the platform category; the named apps below are examples of
+        what a builder could create, not customers or integrations. --%>
   <p
     :if={Site.Brand.hosted?()}
     class="mb-5 inline-flex items-center gap-2 rounded-full border border-[var(--color-border)] bg-[var(--color-bg-1)] px-3.5 py-1.5 text-xs text-[var(--color-text-secondary)]"
     data-role="hosted-brand"
   >
     <span class="size-1.5 rounded-full bg-[var(--color-accent)]" aria-hidden="true"></span>
-    {Site.Brand.name()} is the hosted {Site.Brand.engine()}. The engine is open source and you can run it yourself.
+    Built on open-source {Site.Brand.engine()}.
   </p>
   <%!-- The h1 is the largest thing on the page by a clear margin. It used to
         be `text-5xl`, one step off the section headings, so the page opened at
         roughly the volume it kept for the next eight thousand pixels. --%>
   <h1 class="text-[2.75rem] leading-[1.05] sm:text-6xl font-bold tracking-[-0.03em] text-[var(--color-text-primary)] mb-6">
-    Chat with Claude Code, Codex or Gemini CLI. Watch it work.
+    The platform for building agent apps.
   </h1>
-  <p class="text-lg sm:text-xl leading-relaxed text-[var(--color-text-secondary)] max-w-2xl mx-auto mb-10">
-    Open Conversations to give an agent a task, follow its tools and changes, and send a follow-up.
-    Each conversation has a real computer that keeps its files between prompts.
+  <p class="text-lg sm:text-xl leading-relaxed text-[var(--color-text-secondary)] max-w-2xl mx-auto mb-4">
+    Build AI teammates, coding workspaces, and multi-agent workflows. {Site.Brand.name()} manages the agents, conversations, and computers behind your product.
   </p>
-  <figure class="mb-8" data-role="product-screenshots">
-    <div class="flex items-center justify-center gap-3 sm:gap-5">
-      <a href="/site/images/apps/conversations.jpg" class="min-w-0 flex-1">
-        <img
-          src="/site/images/apps/conversations.jpg"
-          alt="Conversations showing a cart task, tool calls, an expanded code diff, and tests in progress"
-          width="973"
-          height="791"
-          fetchpriority="high"
-          class="w-full rounded-xl border border-[var(--color-border)] shadow-lg"
-        />
-      </a>
-      <a
-        href="/site/images/apps/workbench-mobile.jpg"
-        class="block w-[24%] shrink-0 overflow-hidden rounded-[1.5rem] border-[5px] border-zinc-800 bg-zinc-800 shadow-lg sm:rounded-[2rem] sm:border-[7px]"
-      >
-        <img
-          src="/site/images/apps/workbench-mobile.jpg"
-          alt="Workbench on a phone, with a cart work item assigned to Builder"
-          width="390"
-          height="844"
-          class="w-full"
-        />
-      </a>
-    </div>
-    <figcaption class="mt-4 text-xs text-[var(--color-text-muted)]">
-      Real app screens with a seeded local example.
-    </figcaption>
-  </figure>
+  <p class="text-base text-[var(--color-text-secondary)] max-w-2xl mx-auto mb-10">
+    Build your take on Grokbot, Instinct, or Conductor.
+  </p>
   <div class="flex flex-col sm:flex-row gap-3 justify-center mb-5">
     <a
-      href="https://fountain-conversations.demo.managoat.com/"
+      href="/docs/build"
       class="inline-flex items-center justify-center px-6 py-3 rounded-lg bg-[var(--color-brand)] text-white font-medium hover:bg-[var(--color-brand-hover)] transition-colors text-sm shadow-sm"
     >
-      Open Conversations
+      Start building
     </a>
     <a
-      href="/docs/tour"
+      href="/built-with"
       class="inline-flex items-center justify-center px-6 py-3 rounded-lg border border-[var(--color-border-strong)] bg-[var(--color-bg-1)] text-[var(--color-text-primary)] font-medium hover:bg-[var(--color-bg-2)] transition-colors text-sm"
     >
-      Build with the API
+      Explore example apps
     </a>
   </div>
   <p :if={pricing?()} class="text-xs text-[var(--color-text-muted)]">
@@ -106,16 +77,47 @@
   </p>
 </section>
 
-<%!-- The apps lead the page. The catalog owns their names, destinations and
-      descriptions; the machine and API explanations follow the choices. --%>
+<%!-- Explain the platform before showing the products built on it. --%>
+<section class="max-w-5xl mx-auto px-6 pb-16" data-role="platform">
+  <div class="rounded-2xl border border-[var(--color-border)] bg-[var(--color-bg-1)] p-6 sm:p-8">
+    <.eyebrow label="One platform" />
+    <h2 class="mt-4 text-2xl sm:text-3xl font-semibold tracking-tight text-[var(--color-text-primary)] text-center">
+      Agents. Conversations. Computers.
+    </h2>
+    <dl class="mt-8 grid md:grid-cols-3 gap-8">
+      <div>
+        <dt class="text-lg font-semibold text-[var(--color-text-primary)]">Agents</dt>
+        <dd class="mt-2 text-[var(--color-text-secondary)] leading-relaxed">
+          Choose a runtime, model, skills, and tools. Run Claude Code, Codex, or Gemini CLI through the same API.
+        </dd>
+      </div>
+      <div>
+        <dt class="text-lg font-semibold text-[var(--color-text-primary)]">Conversations</dt>
+        <dd class="mt-2 text-[var(--color-text-secondary)] leading-relaxed">
+          Create threads, stream tool calls and results into your UI, and resume work with its context intact.
+        </dd>
+      </div>
+      <div>
+        <dt class="text-lg font-semibold text-[var(--color-text-primary)]">Computers</dt>
+        <dd class="mt-2 text-[var(--color-text-secondary)] leading-relaxed">
+          Give agents a workspace with your repositories, packages, and credentials. Files stay in place between prompts.
+        </dd>
+      </div>
+    </dl>
+  </div>
+</section>
+
+<%!-- Our apps demonstrate product patterns on the public API. The catalog
+      owns their names, destinations, and builder-facing descriptions. --%>
 <section class="max-w-5xl mx-auto px-6 pb-16">
   <div class="border-t border-[var(--color-border)] pt-16">
-    <.eyebrow label="Apps" />
+    <.eyebrow label="Example apps" />
     <h2 class="mt-4 text-2xl sm:text-3xl font-semibold tracking-tight text-[var(--color-text-primary)] text-center">
-      Use an app. Or build your own on the same API.
+      Your product can take any shape.
     </h2>
     <p class="mt-3 text-center text-[var(--color-text-secondary)] max-w-2xl mx-auto text-lg">
-      {built_app_count()} open-source apps already run on the public API. Use one, fork its source, or point it at your own instance.
+      We built {built_app_count()} open-source apps on the same public API available to you.
+      Explore the interfaces, read the source, and use them as a starting point for your own product.
     </p>
     <div class="mt-10 grid md:grid-cols-3 gap-6">
       <article
@@ -151,18 +153,18 @@
         </p>
         <div class="mt-5 flex flex-wrap items-center gap-4">
           <a
-            href={app.url}
+            href={app.source}
             rel="noopener"
             class="inline-flex items-center px-4 py-2 rounded-lg bg-[var(--color-brand)] text-white font-medium hover:bg-[var(--color-brand-hover)] transition-colors text-sm"
           >
-            Open app
+            Build from source
           </a>
           <a
-            href={app.source}
+            href={app.url}
             rel="noopener"
             class="text-sm text-[var(--color-text-secondary)] underline underline-offset-2 hover:text-[var(--color-text-primary)]"
           >
-            Source
+            Try example
           </a>
         </div>
       </article>
@@ -172,22 +174,10 @@
         href="/built-with"
         class="inline-flex items-center justify-center px-5 py-2.5 rounded-lg border border-[var(--color-border-strong)] bg-[var(--color-bg-1)] text-[var(--color-text-primary)] text-sm font-medium hover:bg-[var(--color-bg-2)] transition-colors"
       >
-        Browse all {built_app_count()} apps
+        Explore all {built_app_count()} examples
       </a>
     </p>
   </div>
-</section>
-
-<section class="max-w-5xl mx-auto px-6 pb-16 text-center" data-role="machine-story">
-  <h2 class="text-2xl sm:text-3xl font-semibold text-[var(--color-text-primary)]">
-    Run coding agents on ready machines.<span :if={pricing?()}> Pay only while they work.</span>
-  </h2>
-  <p class="mt-4 text-lg text-[var(--color-text-secondary)] max-w-2xl mx-auto">
-    Your repositories, packages and credentials arrive with the machine.
-    It parks between prompts and wakes with its work intact.
-    <a href="/self-hosted" class="underline underline-offset-2">Run your own instance</a>
-    or use the hosted service.
-  </p>
 </section>
 
 <%!-- Proof comes before the implementation detail. A reader sees one measured
@@ -259,44 +249,19 @@
   </div>
 </section>
 
-<%!-- How it works, directly after the proof. The reader has no prior model for
-      the category, so the shape comes before the argument and the SDK call is
-      near the top of the page rather than buried under the feature inventory.
-
-      This used to follow the six-question grid and open with "Everything above
-      is three rows and one call". That pointed backwards at a section the
-      reader had not been promised, and it named the primitives after a
-      database table. They are templates here and in
-      .agents/product-marketing.md. "Row" is not a marketing word.
-
-      The h2 makes two claims and needs both. "Once" is what a reader scanning
-      five code blocks is actually asking, and "everything after it is a
-      prompt" is what the section is for. It used to be "This is everything you
-      write", which made the volume claim by pointing at the blocks and left
-      the payoff to be inferred from step 4.
-
-      It does not say "describe", though every step below is declarative and
-      card 1 of "What you get" opens with the word. Step 1's title is "Describe
-      the machine once." and it sits directly under this heading, so an h2
-      taking the same verb and the same "once" reads as a stutter.
-
-      It also does not say "your agents". Three documents are on this page and
-      the Agent is one of them. The split between the machine, the credentials
-      and the agent config is the thing the section exists to show, and a
-      heading that collapses it into "agents" argues against its own steps.
-
-      It is on ink, and it is the reason the ink tokens exist. The code is the
-      substance of the section and there are five blocks of it, so a light
-      ground made five black rectangles float on a white page. On ink they are
-      the ground, lifted one step to `ink-1`. The band also starts high enough
-      that a laptop viewport shows the hero and the top of the code at once,
-      which is the page's first impression: type, then the machine. --%>
+<%!-- How it works: reusable infrastructure configuration, followed by the
+      API call a builder makes from their own product. The ink surface groups
+      the manifest and code examples into one section. --%>
 <section class="bg-[var(--color-ink-0)] text-[var(--color-ink-text)]">
   <div class="max-w-5xl mx-auto px-6 py-16">
-    <.eyebrow label="Setup" tone={:ink} />
+    <.eyebrow label="Build with the API" tone={:ink} />
     <h2 class="mt-4 text-2xl sm:text-3xl font-semibold tracking-tight text-[var(--color-ink-text)] text-center">
-      You write this once. Everything after it is a prompt.
+      Define your agents. Build the app around them.
     </h2>
+    <p class="mt-3 text-center text-[var(--color-ink-secondary)] max-w-2xl mx-auto text-lg">
+      Configure the workspace, credentials, and agent once. Your app sends tasks,
+      streams progress, and continues the conversation through the API.
+    </p>
     <%!-- The three resources are one file, so they are one code block. On wide
           screens its annotations occupy proportional rows beside it: 34/23/43
           follows the documents' rendered line counts (including each `---`),
@@ -370,103 +335,16 @@
   </div>
 </section>
 
-<%!-- The problem and the answer, in one pass. The h2 concedes the reader's
-      complaint and claims it, and each card states one thing they get for
-      that. The section ends on the grid.
-
-      The cards were questions until they stopped needing to be. A question
-      grid asks a reader who already holds the problem to re-derive it, and
-      after the hero and the manifest above there is nothing left to draw out
-      of them. Each h3 is now the claim and the body is the mechanism. This used to be two sections 800 words apart: six
-      questions here, then four "what you stop building" cards restating the
-      same mechanisms. One card per mechanism, and nothing below repeats it.
-
-      Nothing above repeats it either. The hero asserts the ready machine, the
-      unseen credential and the meter that stops, so the cards covering those
-      three take the next step instead. The template that outlives the run, the
-      identity a run borrows, and what a parked sandbox still holds. A card that
-      re-opens a claim the subheadline just made reads as the page doubting
-      itself.
-
-      This is also the page's only mention of a Vault, so it states the
-      HashiCorp collision before the feature (standards/voice-and-style.md).
-
-      EVERY dt IS AN IMPERATIVE. Six of them read down one left edge, so the
-      grammar is part of the shape: a list that changes person between items
-      reads as six unrelated claims rather than one inventory. These ran a noun
-      phrase, an imperative, a negative noun phrase, "You never" and "You can"
-      across six cards before this rule was written down. "You can" also hedges
-      a claim the page is entitled to make outright.
-
-      No dd repeats its own dt. Two of them did: the card about the pull
-      request opened by restating the headline, and the card about the
-      Environment ended on the reuse the headline had already promised.
-
-      The imperative fits five of these cleanly, because five are things the
-      reader does with the product. The audit card is a capability they have
-      afterwards without acting, so the mood has to be earned rather than
-      applied: "Say what changed" made the reader the speaker when the system
-      is the one that recorded, and read as an instruction to confess. The verb
-      has to name something they really do against the trail. If a future card
-      is a property rather than an action and no honest verb presents itself,
-      the rule is wrong for that card and it is better to break it in one place
-      than to force a sentence nobody would write.
-
-      A DENIED CHORE HAS TO HURT. Naming an ops chore only to take it away is
-      the register this section wants, and two cards do it: "without a
-      redeploy" and without a patch handoff. Both are expensive and memorable.
-      It did not work for
-      "Never parse a runtime's output", where the denied chore is one jq
-      filter, and selling the absence of a small chore cost the card the two
-      larger things `Blocks` actually does: one renderer across ACP runtimes,
-      and tool calls and approval requests as first-class kinds rather than
-      scraped text.
-
-      NO dt MAY NAME AN OPS CHORE. The h2 two lines above says the reader did
-      not set out to run a sandbox platform, so a card that opens "Set the
-      machine up" hands back the job the section just took away, six words
-      after taking it. The reader launches from a declared setup. They do not
-      build or configure one. The same trap is open to "install",
-      "provision", "configure" and "wire up".
-
-      A reuse claim counts runs, not Agents. `environment_id` sits on both
-      `agents` and `conversations`, so "point every agent at it" was true and
-      still the wrong axis: an account has a handful of Agents and an unbounded
-      number of runs, and only the second number makes writing the Environment
-      down once worth anything. "Run" over "Conversation" here because the card
-      already introduces one primitive and the page is not owed a second one in
-      the same four lines.
-
-      Two elements, two jobs. The h2 names the problem and claims it, and the
-      grid shows the mechanisms. The lead-in distinguishes the visible agent
-      from the infrastructure the section inventories. It used to call the
-      agent "the easy part", which dismissed a hard problem without adding to
-      the argument. It also used to count the cards, which the reader can see
-      and which is the move 6291ec55 took out of this same paragraph.
-
-      THERE IS NO CLOSER, AND THAT IS THE DECISION. The section used to end on
-      a line handing the product back, and three versions of it failed the same
-      way. "That machine, that vault and that owner" dangled a noun that
-      appeared nowhere else on the page. The triad that replaced it fixed the
-      noun by listing the grid back at the reader. "You keep the product" alone
-      was the only part of that pair doing any work, and on the page it was one
-      short line stranded in the section's bottom padding with the case study
-      panel below it, which reads as something unfinished rather than as a last
-      beat. The grid is the argument and it ends on its own. Anything added
-      here has to be a claim the six cards do not already make, and the two
-      that were tried were both a summary of them.
-
-      This is the first of the two sections that set their heading against the
-      left edge instead of the centre. Six items of dense reference read down a
-      left margin; a centred heading over left-aligned prose gives the eye two
-      starting points and it uses neither. --%>
+<%!-- The platform mechanisms behind the three primitives introduced above.
+      Each definition names a builder benefit and explains what provides it. --%>
 <section class="max-w-5xl mx-auto px-6 py-16">
   <.eyebrow label="What you get" align={:left} />
   <h2 class="mt-4 text-2xl sm:text-3xl font-semibold tracking-tight text-[var(--color-text-primary)] max-w-3xl">
-    You did not set out to run a sandbox platform. We did.
+    The infrastructure behind your app, already handled.
   </h2>
   <p class="mt-3 text-[var(--color-text-secondary)] max-w-2xl text-lg">
-    The agent is only the visible part.
+    Build the interface and workflows your users need. {Site.Brand.name()} handles
+    runtime setup, credentials, workspace persistence, and execution history.
   </p>
   <%!-- A definition list, which is what the page uses for a claim and the
         mechanism behind it (the protocols, the limits and the case study all
@@ -938,48 +816,25 @@
   </div>
 </section>
 
-<%!-- Footer CTA. The last thing on the page, which is what a closer is.
-
-      The h2 names the job the reader came to do. The "What you get" grid used
-      to close on "You keep the product", which was a recap sitting under the
-      six cards that had just said it. Here the outcome becomes the ask.
-
-      It used to read "A key, a call, and a machine you did not build", three
-      nouns in a row that named the ingredients rather than the payoff. The
-      machine you did not build is also the page's third telling of that idea
-      by this point.
-
-      The deck is one sentence and four steps. It was three sentences: the
-      steps, then a list of things that do not happen (no machine to provision,
-      no card, nothing that renews), then the payoff. The middle sentence is
-      the hero's own fine print and the price card's. The new line gives the
-      four steps a concrete finish instead.
-
-      It says "model key", the phrase the other five marketing mentions use,
-      and it names no surface. The protocols section a screen above ends
-      "Whatever you use starts an agent with a URL and a key", so a closer that
-      said "with the SDK" would narrow the promise the page had just widened,
-      and the SDK is TypeScript while the API is not.
-
-      On ink the primary button is `--color-ink-brand`, which is the brand blue
-      the dark theme already uses. `--color-brand` is #0b5acc and would be a
-      dark button on a near-black ground. --%>
+<%!-- Repeat the app-building outcome and link to the build guide. The ink
+      surface uses --color-ink-brand to keep the primary button legible. --%>
 <section class={[
   "bg-[var(--color-ink-0)]",
   pricing?() && "border-t border-[var(--color-ink-border)]"
 ]}>
   <div class="max-w-5xl mx-auto px-6 py-20 text-center">
     <h2 class="text-3xl sm:text-4xl font-bold tracking-tight text-[var(--color-ink-text)] mb-4">
-      Give your product a coding agent.
+      Build your own agent app.
     </h2>
     <p class="text-[var(--color-ink-secondary)] mb-9 max-w-lg mx-auto text-lg leading-relaxed">
-      Sign up, paste a model key, configure your agent, and start each run with one API call.
+      Start with an open-source example or build your own interface.
+      The agents, conversations, and computers are ready to connect through the API.
     </p>
     <a
-      href="/auth/register"
+      href="/docs/build"
       class="inline-flex items-center justify-center px-8 py-3.5 rounded-lg bg-[var(--color-ink-brand)] text-[var(--color-ink-0)] font-semibold hover:opacity-90 transition-opacity"
     >
-      Run your first agent free
+      Start building
     </a>
     <p class="mt-5 text-sm text-[var(--color-ink-secondary)]">
       Already have an account? <a

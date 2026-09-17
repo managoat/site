@@ -10,13 +10,13 @@ defmodule Site.Build do
   `try_files` serves without a redirect.
   """
 
-  @site_title "Claude Code, Codex and Gemini CLI behind one API"
+  @site_title "The platform for building agent apps"
 
   @doc "The description a page uses when it sets none: the pitch."
   def default_description do
-    "#{Site.Brand.name()} is a conversational API to a computer. The " <>
-      "machine arrives with your repositories and credentials, and the meter " <>
-      "runs while an agent works and stops while the machine waits."
+    "Build AI teammates, coding workspaces, and multi-agent workflows. " <>
+      "#{Site.Brand.name()} manages the agents, conversations, and computers " <>
+      "behind your product."
   end
 
   @doc "Every page the site publishes."
