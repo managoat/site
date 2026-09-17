@@ -691,39 +691,6 @@ defmodule Site.Pages do
   def all_protocols do
     [
       %{
-        id: "agui",
-        kind: :client,
-        name: "AG-UI",
-        long: "Agent-User Interaction Protocol",
-        surface: "POST /api/agui/:agent_id",
-        direction: "An AG-UI host starts and follows a Fountain agent.",
-        pitch:
-          "Put a Fountain agent in an AG-UI front end without writing an adapter. " <>
-            "Fountain turns RunAgentInput into the standard event stream and returns " <>
-            "host tools as TOOL_CALL events. Each thread maps to one Conversation, so " <>
-            "its sandbox keeps the files and context from one message to the next.",
-        docs: "/docs/integrations/openbot",
-        docs_label: "OpenBot and AG-UI",
-        works_with: [
-          %{
-            name: "OpenBot",
-            slug: nil,
-            note: "CopilotKit's agent platform; a coworker per agent, verified"
-          },
-          %{
-            name: "CopilotKit",
-            slug: nil,
-            note: "React, Angular and React Native apps, via HttpAgent"
-          },
-          %{name: "Slack", slug: "slack", note: "CopilotKit's chat-platform clients"},
-          %{name: "LangGraph", slug: "langgraph", note: "a peer in the same roster"},
-          %{name: "CrewAI", slug: "crewai", note: "a peer in the same roster"},
-          %{name: "Mastra", slug: nil, note: "a peer in the same roster"},
-          %{name: "Pydantic AI", slug: "pydantic", note: "a peer in the same roster"},
-          %{name: "Google ADK", slug: "google", note: "a peer in the same roster"}
-        ]
-      },
-      %{
         id: "acp",
         kind: :client,
         name: "ACP",
@@ -763,55 +730,13 @@ defmodule Site.Pages do
         ]
       },
       %{
-        id: "openai",
-        kind: :client,
-        name: "OpenAI-compatible",
-        status: "Alpha",
-        long: "Chat completions, where the model is an agent",
-        surface: "POST /v1/chat/completions",
-        direction: "Any client or gateway with a base-URL field drives a Fountain agent.",
-        pitch:
-          "Point an OpenAI-compatible client or gateway at Fountain and your agents " <>
-            "appear in its model picker. A thread key binds each chat to one sandbox, " <>
-            "and tools come back as tool_calls for existing LangChain and Deep Agents " <>
-            "loops. Available on request while the response shape is in alpha.",
-        docs: "/docs/integrations/openai-compatible",
-        docs_label: "The OpenAI-compatible API",
-        works_with: [
-          %{name: "Open WebUI", slug: nil, note: "a base URL and a key"},
-          %{name: "LibreChat", slug: nil, note: "a custom endpoint"},
-          %{
-            name: "LiteLLM",
-            slug: nil,
-            note: "a route, verified against the example in the repo"
-          },
-          %{name: "Portkey", slug: nil, note: "a gateway route"},
-          %{name: "Kong AI Gateway", slug: "kong", note: "a gateway route"},
-          %{name: "Cloudflare AI Gateway", slug: "cloudflare", note: "a gateway route"},
-          %{name: "OpenAI SDKs", slug: "openai", note: "base_url, in any language"},
-          %{name: "Vercel AI SDK", slug: "vercel", note: "createOpenAICompatible"},
-          %{
-            name: "LangChain",
-            slug: "langchain",
-            note: "as a model, a tool, or a Deep Agents subagent"
-          },
-          %{name: "LangGraph", slug: "langgraph", note: "one thread_id is one sandbox per agent"},
-          %{name: "Continue", slug: nil, note: "apiBase on an openai provider"},
-          %{name: "Cline", slug: "cline", note: "its OpenAI Compatible provider"},
-          %{name: "Aider", slug: nil, note: "OPENAI_API_BASE"},
-          %{name: "Dify", slug: "dify", note: "the OpenAI-API-compatible plugin"},
-          %{name: "Raycast", slug: "raycast", note: "a custom provider"},
-          %{name: "curl", slug: "curl", note: "one request"}
-        ]
-      },
-      %{
         id: "mcp",
         kind: :tool,
         name: "MCP",
         long: "Model Context Protocol, both ways",
         surface: "Any MCP server, on any agent",
         # No count and no list in the prose. Both are distribution-dependent
-        # (#1525): core hosts team, team-comms, gmail and caller, and each
+        # (#1525): core hosts team and gmail, and each
         # installed extension may add its own, so a number here is wrong on one
         # image or the other. The `works_with` rows below say which, and they
         # are filtered by what is installed.
@@ -830,7 +755,6 @@ defmodule Site.Pages do
             slug: nil,
             note: "message a teammate, from inside the sandbox"
           },
-          %{name: "fountain-comms", slug: nil, note: "a teammate's own email and phone"},
           %{
             name: "fountain-buzz",
             slug: nil,
@@ -1039,21 +963,25 @@ defmodule Site.Pages do
   @doc "One snippet for each shape of builder, kept here so braces are not HEEx."
   def scenarios do
     [
+      # Fountain retired its AG-UI and OpenAI-compatible endpoints (fountain
+      # ADR 0057), so no scenario here may suggest that pointing an existing
+      # client at a Fountain URL is enough. These two used to be CopilotKit's
+      # HttpAgent and a chat-completions curl; both are now the native API,
+      # with the application reading the stream itself.
       %{
         id: "react",
         have: "A React app",
         want: "An agent in the product, with a sandbox of its own behind the chat.",
         how:
-          "Point CopilotKit's AG-UI client at the agent's endpoint with a user-scoped OAuth token. No server-side adapter.",
+          "The TypeScript SDK and a user-scoped token from Sign in with Fountain. Your component starts the run and renders the stream itself.",
         lang: "ts",
-        docs: "/docs/integrations/openbot",
+        docs: "/docs/build",
         code: """
-        import { HttpAgent } from "@ag-ui/client";
+        import { Fountain } from "@managoat/fountain-sdk";
 
-        const reviewer = new HttpAgent({
-          url: "https://managoat.com/api/agui/<agent_id>",
-          headers: { Authorization: `Bearer ${userToken}` }, // from Sign in with Fountain
-        });
+        const fountain = new Fountain({ apiKey: userToken }); // from Sign in with Fountain
+        const run = fountain.runRequest({ agent_id: agentId, prompt });
+        for await (const chunk of run.textStream) setReply((text) => text + chunk);
         """
       },
       %{
@@ -1073,18 +1001,19 @@ defmodule Site.Pages do
         """
       },
       %{
-        id: "chat",
-        have: "A chat UI with a base-URL field",
-        want: "Your agents in its model picker.",
-        how: "Base URL, key, and a thread header so each chat keeps one sandbox.",
+        id: "backend",
+        have: "A backend or a script",
+        want: "Start an agent and follow its work, with nothing installed.",
+        how: "Two requests: create the conversation with a prompt, then read its event stream.",
         lang: "bash",
-        docs: "/docs/integrations/openai-compatible",
+        docs: "/docs/api",
         code: """
-        curl https://managoat.com/v1/chat/completions \\
-          -H "Authorization: Bearer ftn_..." \\
-          -H "X-Fountain-Thread: prs-2026-08-25" \\
-          -d '{"model": "reviewer", "stream": true,
-               "messages": [{"role": "user", "content": "Review the open PRs."}]}'
+        curl -sS -X POST https://managoat.com/api/conversations \\
+          -H "Authorization: Bearer ftn_..." -H "Content-Type: application/json" \\
+          -d '{"agent_id": "<agent_id>", "prompt": "Review the open PRs."}'
+
+        curl -N -H "Authorization: Bearer ftn_..." \\
+          "https://managoat.com/api/conversations/<id>/stream?blocks=true"
         """
       },
       %{
@@ -1131,8 +1060,9 @@ defmodule Site.Pages do
         import { Fountain } from "@managoat/fountain-sdk";
 
         const fountain = new Fountain({ apiKey: token }); // from the OAuth flow
-        const conv = await fountain.conversations.create({ agent: "reviewer" });
-        for await (const block of fountain.conversations.stream(conv.id)) render(block);
+        const roster = await fountain.agents.list();
+        const run = fountain.resume(conversationId).send("Pick up where you left off.");
+        for await (const event of run) render(event);
         """
       }
     ]
@@ -1564,27 +1494,22 @@ defmodule Site.Pages do
   end
 
   @doc """
-  The three features the hosted platform rations, and what they cost on an
-  instance of your own. The rows track `docs/reference/feature-status.md`; a
-  feature that comes off that page comes off this one.
+  The features the hosted platform configures for you, and what each costs on
+  an instance of your own. The rows track `docs/reference/feature-status.md`; a
+  feature that comes off that page comes off this one. Two have: teammate email
+  and phone was removed, and the OpenAI-compatible API was retired with its
+  `openai_compat` flag (fountain ADR 0057).
   """
   def rationed_features do
     [
       %{
-        name: "Teammate email and phone",
-        blurb: "An agent with its own inbox and its own number, that answers what arrives.",
-        hosted: "Behind a flag. Ask us to turn it on for your account.",
-        yours:
-          "Set AGENTMAIL_API_KEY and AGENTPHONE_API_KEY, then add team_comms to FEATURE_FLAGS_ON.",
-        docs: "/docs/catalog/mcp-servers/fountain-comms"
-      },
-      %{
-        name: "OpenAI-compatible API",
+        name: "Connections",
         blurb:
-          "Point anything that speaks chat completions at your instance, where the model is an agent.",
-        hosted: "Behind a flag. Ask us to turn it on for your account.",
-        yours: "Add openai_compat to FEATURE_FLAGS_ON.",
-        docs: "/docs/integrations/openai-compatible"
+          "Sign in to a provider once and the agent gets its tools. The OAuth token never enters the sandbox.",
+        hosted: "Alpha, behind a flag. Ask us to turn it on for your account.",
+        yours:
+          "Configure the credential broker and your provider apps, then add connections to FEATURE_FLAGS_ON.",
+        docs: "/docs/catalog/connections"
       },
       %{
         name: "Brokered credentials",
