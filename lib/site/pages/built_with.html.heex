@@ -2,27 +2,28 @@
 <section class="max-w-5xl mx-auto px-6 py-20 text-center">
   <.eyebrow label={"Built with #{Site.Brand.name()}"} class="mb-5" />
   <h1 class="text-4xl sm:text-5xl font-bold tracking-tight text-[var(--color-text-primary)] mb-5 leading-tight">
-    {length(built_apps_flat())} open-source apps. One API for the agents behind them.
+    {length(built_apps_flat())} examples to build your next agent app.
   </h1>
   <p class="text-lg sm:text-xl text-[var(--color-text-secondary)] max-w-2xl mx-auto">
-    We built these apps to show what {Site.Brand.name()} can power: chat, research, data analysis, code work, infrastructure operations and multi-agent workflows. Open any app, inspect its source or connect it to your own {Site.Brand.name()} server.
+    Build AI teammates, coding workbenches, research tools, and multi-agent workflows.
+    These open-source apps show how to turn {Site.Brand.name()}'s agents, conversations,
+    and computers into a product of your own. Try an example, read its source, and make it yours.
   </p>
   <p class="mt-4 text-sm text-[var(--color-text-muted)] max-w-2xl mx-auto">
     Most have no backend of their own. {Site.Brand.name()} keeps the agent machines ready, holds credentials and transcripts, and meters only the time an agent is working.
   </p>
   <div class="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
     <a
-      href={(flagship_apps() |> hd()).url}
-      rel="noopener"
+      href="/docs/build"
       class="inline-flex items-center justify-center px-6 py-3 rounded-lg bg-[var(--color-brand)] text-white font-medium hover:bg-[var(--color-brand-hover)] transition-colors text-sm"
     >
-      Open Conversations
+      Start building
     </a>
     <a
-      href="/docs/build"
+      href={"##{flagship_group().id}"}
       class="inline-flex items-center justify-center px-6 py-3 rounded-lg border border-[var(--color-border-strong)] bg-[var(--color-bg-1)] text-[var(--color-text-primary)] font-medium hover:bg-[var(--color-bg-2)] transition-colors text-sm"
     >
-      Build a chat app
+      Explore the examples
     </a>
   </div>
   <div class="mt-8 flex flex-wrap gap-2 justify-center" data-role="group-chips">
@@ -93,18 +94,18 @@
         </p>
         <div class="mt-5 flex flex-wrap gap-3">
           <a
-            href={app.url}
+            href={app.source}
             rel="noopener"
             class="inline-flex items-center px-4 py-2 rounded-lg bg-[var(--color-brand)] text-white font-medium hover:bg-[var(--color-brand-hover)] transition-colors text-sm"
           >
-            Open it
+            Build from source
           </a>
           <a
-            href={app.source}
+            href={app.url}
             rel="noopener"
             class="inline-flex items-center px-4 py-2 rounded-lg border border-[var(--color-border)] text-[var(--color-text-primary)] font-medium hover:bg-[var(--color-bg-2)] transition-colors text-sm"
           >
-            Source
+            Try example
           </a>
         </div>
       </article>
@@ -160,18 +161,18 @@
         </p>
         <div class="mt-5 flex flex-wrap gap-3">
           <a
-            href={app.url}
+            href={app.source}
             rel="noopener"
             class="inline-flex items-center px-4 py-2 rounded-lg bg-[var(--color-brand)] text-white font-medium hover:bg-[var(--color-brand-hover)] transition-colors text-sm"
           >
-            Open it
+            Build from source
           </a>
           <a
-            href={app.source}
+            href={app.url}
             rel="noopener"
             class="inline-flex items-center px-4 py-2 rounded-lg border border-[var(--color-border)] text-[var(--color-text-primary)] font-medium hover:bg-[var(--color-bg-2)] transition-colors text-sm"
           >
-            Source
+            Try example
           </a>
         </div>
       </article>
@@ -227,7 +228,7 @@
 <section class="bg-[var(--color-bg-1)] border-t border-[var(--color-border)]">
   <div class="max-w-5xl mx-auto px-6 py-20 text-center">
     <h2 class="text-2xl sm:text-3xl font-bold text-[var(--color-text-primary)] mb-4">
-      Build the next one.
+      Build your own agent app.
     </h2>
     <p class="text-[var(--color-text-secondary)] mb-8 max-w-lg mx-auto">
       A static front end can start with the TypeScript SDK and Sign in with {Site.Brand.name()}. The build guide walks through a team chat end to end, and every app above is an implementation you can read.
@@ -237,7 +238,7 @@
         href="/docs/build"
         class="inline-flex items-center justify-center px-6 py-3 rounded-lg bg-[var(--color-brand)] text-white font-medium hover:bg-[var(--color-brand-hover)] transition-colors text-sm"
       >
-        Build a chat app
+        Start building
       </a>
       <a
         href="/docs/api"

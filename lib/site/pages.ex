@@ -1088,9 +1088,9 @@ defmodule Site.Pages do
     [
       %{
         id: "flagship",
-        title: "Three ways to work with your agents",
+        title: "Three starting points for your agent app",
         blurb:
-          "Fountain's web UI is the operator console for accounts, keys, agents, environments and audit. These three apps are working surfaces built on the same public API available to your product.",
+          "Build an agent workspace, a team of AI coworkers, or an engineering workbench. These examples show how different products use the same agents, conversations, and computers through the public API.",
         apps: [
           %{
             id: "fountain-conversations",
@@ -1109,9 +1109,10 @@ defmodule Site.Pages do
             shows:
               "event streams rendered as blocks and one sandbox shared by several conversations",
             flagship: %{
-              homepage: "Run an agent and watch every step.",
+              homepage:
+                "Build an agent workspace with live tool calls, code diffs, and conversation history.",
               like: "A coding-agent chat with its checkout, shell and event stream visible.",
-              who: "Start here to see one run from first prompt to final response."
+              who: "Start here to build a UI around an agent's event stream."
             }
           },
           %{
@@ -1130,9 +1131,10 @@ defmodule Site.Pages do
               "Message your agents as teammates. Keep a roster beside the thread, schedule recurring routines, attach images and search the conversation history.",
             shows: "the team API, SSE streaming, schedules and usage",
             flagship: %{
-              homepage: "Message your agents like teammates.",
+              homepage:
+                "Build AI teammates with a shared roster, ongoing threads, and scheduled routines.",
               like: "A team messenger whose contacts are agents you configured.",
-              who: "Use it when a thread is the natural place to hand off work."
+              who: "Start here to build a product where users work with a team of agents."
             }
           },
           %{
@@ -1151,9 +1153,11 @@ defmodule Site.Pages do
             shows:
               "projects composed from reusable environments and credentials, with agents as staff",
             flagship: %{
-              homepage: "Assign work across shared projects.",
+              homepage:
+                "Build a workbench that connects projects, work items, and the agents doing the work.",
               like: "One board for shared projects, work items and the agents assigned to them.",
-              who: "Use it when several people need the same agents and project setup."
+              who:
+                "Start here to build workflows around projects and reusable agent environments."
             }
           }
         ]
