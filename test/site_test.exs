@@ -56,6 +56,11 @@ defmodule SiteTest do
     end
   end
 
+  test "the homepage does not send readers into the Conversations demo", %{pages: pages} do
+    refute pages["/"] =~ "fountain-conversations.demo.managoat.com"
+    refute pages["/"] =~ "Open Conversations"
+  end
+
   test "every internal link lands on a page, a redirect, or the app", %{pages: pages} do
     site_paths = Enum.map(Site.Build.pages(), & &1.path)
     redirects = Map.keys(Site.Build.redirects())
