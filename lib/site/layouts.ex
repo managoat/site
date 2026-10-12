@@ -86,6 +86,7 @@ defmodule Site.Layouts do
               for the same tokens. --%>
         <link rel="stylesheet" href={Site.Assets.tokens_css()} />
         <link rel="stylesheet" href={Site.Assets.paper_css()} />
+        <link rel="stylesheet" href={Site.Assets.fun_css()} />
         <script>
           window.tailwind = window.tailwind || {};
           window.tailwind.config = {

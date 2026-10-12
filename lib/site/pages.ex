@@ -56,6 +56,83 @@ defmodule Site.Pages do
   end
 
   @doc """
+  One sprite: a four-point sparkle, the same star the goat wears on its
+  forehead. `fun.css` gives it the glow and the motion; `class` picks which
+  (`sprite-main`, `sprite-drift`, `sprite-asleep`).
+  """
+  attr(:class, :string, default: nil)
+  attr(:rest, :global)
+
+  def sprite(assigns) do
+    ~H"""
+    <span class={["sprite", @class]} aria-hidden="true" {@rest}>
+      <svg viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 0c.6 6.4 5.6 11.4 12 12-6.4.6-11.4 5.6-12 12-.6-6.4-5.6-11.4-12-12C6.4 11.4 11.4 6.4 12 0z" />
+      </svg>
+    </span>
+    """
+  end
+
+  @doc """
+  The field guide: the homepage's jokes, each pinned to the real thing it
+  stands for, so a reader who enjoyed the goat still leaves knowing the
+  vocabulary the manual uses. `aka` is that vocabulary; keep it exact.
+  """
+  def field_guide do
+    [
+      %{
+        glyph: "🐐",
+        name: "The goat",
+        aka: "Fountain",
+        body:
+          "The control plane. It holds the keys, keeps every transcript and hands " <>
+            "each job to a sprite. Open source, and it fits on your laptop."
+      },
+      %{
+        glyph: "✨",
+        name: "A sprite",
+        aka: "a sandbox",
+        body:
+          "A real Linux machine with your checkout on it. Usually a Sprite from " <>
+            "sprites.dev, but E2B, Daytona and the Mac mini under your desk all " <>
+            "answer to the name."
+      },
+      %{
+        glyph: "📜",
+        name: "A spell",
+        aka: "an Environment",
+        body:
+          "What a sprite wakes up with: repositories, packages, setup scripts and " <>
+            "network rules. Written once in YAML, cast on every run."
+      },
+      %{
+        glyph: "🦉",
+        name: "A familiar",
+        aka: "an Agent",
+        body:
+          "Claude Code, Codex or Gemini CLI, plus the instructions, model and tools " <>
+            "you gave it. The one that actually does the work."
+      },
+      %{
+        glyph: "🎒",
+        name: "A satchel",
+        aka: "a Vault",
+        body:
+          "The credentials a run carries. Swap the satchel and the same spell runs " <>
+            "as you, as a bot or as your customer."
+      },
+      %{
+        glyph: "💤",
+        name: "A nap",
+        aka: "parking",
+        body:
+          "Between prompts a sprite sleeps with its files intact. The next message " <>
+            "wakes it right where it left off."
+      }
+    ]
+  end
+
+  @doc """
   The homepage's build sequence: three document annotations, apply, then call.
 
   The first three beats annotate one `---`-separated manifest. Keeping their

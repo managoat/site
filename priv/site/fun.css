@@ -1,0 +1,283 @@
+/* Fun — the goat, the sprites, and the little conversation between them.
+ *
+ * The homepage hero is a scene: the goat (the brand mark) asks a sprite for
+ * something, the sprite answers, and a few more sprites drift around it, one
+ * of them asleep, which is what a parked sandbox is. Clicking the goat makes
+ * it hop and baa (the script is at the bottom of `home.html.heex`).
+ *
+ * Everything moves with CSS alone, and everything stops for a reader who asked
+ * for reduced motion: the bubbles are then simply all there, which still tells
+ * the whole story.
+ */
+
+/* A drifting sprite near the edge pokes a few pixels past a phone's width
+   mid-animation. `clip` rather than `hidden`, so the hero does not become a
+   scroll container and the baa can still rise above the goat. */
+[data-role="hero"] {
+  overflow-x: clip;
+}
+
+.goat-scene {
+  position: relative;
+  max-width: 34rem;
+  margin: 0 auto;
+  padding: 1.5rem 0.5rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  text-align: left;
+}
+
+.scene-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.scene-row-right {
+  justify-content: flex-end;
+}
+
+/* ── The goat ────────────────────────────────────────────────────────── */
+
+.scene-goat {
+  position: relative;
+  flex-shrink: 0;
+  width: 5.5rem;
+  height: 5.5rem;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  border-radius: 1.25rem;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.scene-goat img {
+  width: 100%;
+  height: 100%;
+  border-radius: 1.25rem;
+  box-shadow: 0 10px 30px -12px var(--color-accent);
+  transition: transform 160ms ease;
+}
+
+.scene-goat:hover img {
+  transform: rotate(-6deg) scale(1.04);
+}
+
+.scene-goat:focus-visible {
+  outline: 2px solid var(--color-focus-ring, var(--color-accent));
+  outline-offset: 4px;
+}
+
+.scene-goat.is-hopping img {
+  animation: goat-hop 520ms cubic-bezier(0.3, 1.6, 0.5, 1);
+}
+
+@keyframes goat-hop {
+  0% { transform: translateY(0) rotate(0); }
+  40% { transform: translateY(-22px) rotate(-10deg); }
+  70% { transform: translateY(0) rotate(4deg); }
+  100% { transform: translateY(0) rotate(0); }
+}
+
+/* "Baa!" and the sparks it throws, spawned by the script and removed after. */
+.goat-baa {
+  position: absolute;
+  left: 50%;
+  top: -0.25rem;
+  pointer-events: none;
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--color-accent);
+  white-space: nowrap;
+  animation: baa-rise 900ms ease-out forwards;
+}
+
+@keyframes baa-rise {
+  0% { opacity: 0; transform: translate(-50%, 0) scale(0.6); }
+  20% { opacity: 1; transform: translate(-50%, -14px) scale(1.1); }
+  100% { opacity: 0; transform: translate(-50%, -46px) scale(1); }
+}
+
+.goat-spark {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 0.7rem;
+  height: 0.7rem;
+  pointer-events: none;
+  color: var(--color-accent);
+  animation: spark-fly 800ms ease-out forwards;
+}
+
+@keyframes spark-fly {
+  0% { opacity: 1; transform: translate(-50%, -50%) scale(0.4); }
+  100% { opacity: 0; transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(1.2) rotate(90deg); }
+}
+
+/* ── Sprites ─────────────────────────────────────────────────────────── */
+
+.sprite {
+  display: inline-block;
+  color: var(--color-accent);
+  filter: drop-shadow(0 0 6px var(--color-accent-line, var(--color-accent)));
+}
+
+.sprite svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.sprite-main {
+  flex-shrink: 0;
+  width: 2.75rem;
+  height: 2.75rem;
+  animation: sprite-bob 2.6s ease-in-out infinite;
+}
+
+@keyframes sprite-bob {
+  0%, 100% { transform: translateY(0) rotate(0); }
+  50% { transform: translateY(-7px) rotate(12deg); }
+}
+
+/* The ambient herd: small, dim, drifting on their own clocks. */
+.sprite-drift {
+  position: absolute;
+  width: 0.9rem;
+  height: 0.9rem;
+  opacity: 0.55;
+  animation: sprite-drift 7s ease-in-out infinite;
+}
+
+.sprite-drift:nth-of-type(2) { animation-duration: 9s; animation-delay: -2s; }
+.sprite-drift:nth-of-type(3) { animation-duration: 6s; animation-delay: -4s; }
+.sprite-drift:nth-of-type(4) { animation-duration: 8s; animation-delay: -1s; }
+
+@keyframes sprite-drift {
+  0%, 100% { transform: translate(0, 0) rotate(0); }
+  33% { transform: translate(10px, -12px) rotate(40deg); }
+  66% { transform: translate(-8px, 6px) rotate(-20deg); }
+}
+
+/* A parked sprite: dimmer, still, and snoring. */
+.sprite-asleep {
+  position: absolute;
+  width: 1.1rem;
+  height: 1.1rem;
+  opacity: 0.4;
+  filter: none;
+}
+
+.sprite-zzz {
+  position: absolute;
+  left: 100%;
+  bottom: 60%;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  letter-spacing: 0.1em;
+  animation: zzz 3s ease-in-out infinite;
+}
+
+@keyframes zzz {
+  0% { opacity: 0; transform: translate(0, 4px); }
+  30% { opacity: 1; }
+  100% { opacity: 0; transform: translate(8px, -14px); }
+}
+
+/* ── Speech bubbles ──────────────────────────────────────────────────── */
+
+.bubble {
+  position: relative;
+  margin: 0;
+  max-width: 19rem;
+  padding: 0.55rem 0.9rem;
+  border-radius: 1rem;
+  font-size: 0.875rem;
+  line-height: 1.35;
+  border: 1px solid var(--color-border);
+  background: var(--color-bg-1);
+  color: var(--color-text-primary);
+  box-shadow: 0 4px 14px -8px rgba(0, 0, 0, 0.25);
+}
+
+.bubble-goat {
+  border-bottom-left-radius: 0.25rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.8rem;
+}
+
+.bubble-sprite {
+  border-bottom-right-radius: 0.25rem;
+  border-color: var(--color-accent-line, var(--color-border));
+  background: var(--color-accent-soft, var(--color-bg-2));
+  color: var(--color-accent-ink, var(--color-text-primary));
+}
+
+/* One ten-second loop: the goat asks, the sprite answers, the sprite
+   delivers, then everyone pauses and it starts again. Opacity only, so the
+   bubbles hold their space and nothing below them jumps. */
+.say-1, .say-2, .say-3 {
+  animation-duration: 10s;
+  animation-iteration-count: infinite;
+  animation-timing-function: ease-out;
+  animation-fill-mode: both;
+}
+
+.say-1 { animation-name: say-1; }
+.say-2 { animation-name: say-2; }
+.say-3 { animation-name: say-3; }
+
+@keyframes say-1 {
+  0% { opacity: 0; transform: translateY(6px); }
+  5%, 86% { opacity: 1; transform: none; }
+  94%, 100% { opacity: 0; transform: none; }
+}
+
+@keyframes say-2 {
+  0%, 16% { opacity: 0; transform: translateY(6px); }
+  21%, 86% { opacity: 1; transform: none; }
+  94%, 100% { opacity: 0; transform: none; }
+}
+
+@keyframes say-3 {
+  0%, 46% { opacity: 0; transform: translateY(6px); }
+  51%, 86% { opacity: 1; transform: none; }
+  94%, 100% { opacity: 0; transform: none; }
+}
+
+/* ── Field guide ─────────────────────────────────────────────────────── */
+
+.field-card {
+  transition: transform 160ms ease, border-color 160ms ease;
+}
+
+.field-card:hover {
+  transform: translateY(-3px) rotate(-0.4deg);
+  border-color: var(--color-accent-line, var(--color-border-strong));
+}
+
+.field-card:hover .field-glyph {
+  animation: glyph-wiggle 500ms ease-in-out;
+}
+
+@keyframes glyph-wiggle {
+  0%, 100% { transform: rotate(0); }
+  25% { transform: rotate(-12deg); }
+  75% { transform: rotate(10deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .goat-scene *,
+  .field-card,
+  .field-card * {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .say-1, .say-2, .say-3 {
+    opacity: 1;
+  }
+}
