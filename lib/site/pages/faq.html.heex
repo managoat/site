@@ -7,7 +7,7 @@
     Answers, with the limits attached.
   </h1>
   <p class="text-lg sm:text-xl text-[var(--color-text-secondary)] max-w-2xl mx-auto mb-10">
-    Everything a developer, a buyer and a security reviewer ask before building on {Site.Brand.name()}, in one place. Where an answer has a limit, the limit is on the page beside it rather than in a questionnaire three weeks later.
+    Everything a developer and a security reviewer ask about {Site.Brand.name()}, in one place. Where an answer has a limit, the limit is on the page beside it rather than in a questionnaire three weeks later.
   </p>
   <div class="flex flex-wrap gap-2 justify-center" data-role="faq-chips">
     <a
@@ -91,22 +91,22 @@
   </div>
 </section>
 
-<%!-- Footer CTA. The manual is the deeper answer to most of the above, so it
-      gets equal billing with the sign-up. --%>
+<%!-- Footer CTA. The manual is the deeper answer to most of the above, and
+      the person who runs it answers the rest. --%>
 <section class="bg-[var(--color-bg-2)] border-t border-[var(--color-border)]">
   <div class="max-w-5xl mx-auto px-6 py-20 text-center">
     <h2 class="text-3xl font-bold tracking-tight text-[var(--color-text-primary)] mb-4">
       Still holding a question?
     </h2>
     <p class="text-[var(--color-text-secondary)] max-w-xl mx-auto mb-8">
-      The manual answers in more depth than a page like this can, and the server it describes is open source, so the last word is always the code.
+      The manual answers in more depth than a page like this can, and the server it describes is open source, so the last word is always the code. Or ask {Site.Brand.contact_name()}.
     </p>
     <div class="flex flex-col sm:flex-row gap-3 justify-center">
       <a
-        href="/auth/register"
+        href={Site.Brand.contact_url()}
         class="inline-flex items-center justify-center px-6 py-3 rounded-lg bg-[var(--color-brand)] text-white font-medium hover:bg-[var(--color-brand-hover)] transition-colors text-sm"
       >
-        Run your first agent free
+        Contact {Site.Brand.contact_name()}
       </a>
       <a
         href="/docs"

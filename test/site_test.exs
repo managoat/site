@@ -44,6 +44,18 @@ defmodule SiteTest do
     end
   end
 
+  # Managoat is not offered, so nothing asks a reader to sign up or quotes a
+  # price; the call to action everywhere is a mail to the person who runs it.
+  test "no page sells the hosted instance", %{pages: pages} do
+    for {path, html} <- pages do
+      refute html =~ "/auth/register", "#{path} links the sign-up"
+      refute html =~ "/auth/login", "#{path} links the sign-in"
+      refute html =~ ~r/\$\d/, "#{path} quotes a price"
+      refute html =~ ~r/free credit|first agent free/i, "#{path} offers free credit"
+      assert html =~ ~s(href="#{Site.Brand.contact_url()}"), "#{path} has no contact link"
+    end
+  end
+
   test "every internal link lands on a page, a redirect, or the app", %{pages: pages} do
     site_paths = Enum.map(Site.Build.pages(), & &1.path)
     redirects = Map.keys(Site.Build.redirects())

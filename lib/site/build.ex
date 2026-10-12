@@ -5,8 +5,8 @@ defmodule Site.Build do
   A page is a path, the template that renders it, and the title and
   description its card carries; the table is the one the app's
   `MarketingController` used to hold, one clause per action. Output file
-  names follow the served path with `.html` appended (`/launch` →
-  `launch.html`) and `/` is `index.html`, which is the shape `nginx.conf`'s
+  names follow the served path with `.html` appended (`/faq` →
+  `faq.html`) and `/` is `index.html`, which is the shape `nginx.conf`'s
   `try_files` serves without a redirect.
   """
 
@@ -14,9 +14,9 @@ defmodule Site.Build do
 
   @doc "The description a page uses when it sets none: the pitch."
   def default_description do
-    "#{Site.Brand.name()} is a conversational API to a computer. The " <>
-      "machine arrives with your repositories and credentials, and the meter " <>
-      "runs while an agent works and stops while the machine waits."
+    "#{Site.Brand.name()} is a conversational API to a computer, built on the " <>
+      "open-source #{Site.Brand.engine()} server. The machine arrives with your " <>
+      "repositories and credentials and keeps its work between prompts."
   end
 
   @doc "Every page the site publishes."
@@ -32,14 +32,6 @@ defmodule Site.Build do
         description: default_description()
       },
       %{
-        path: "/launch",
-        template: :launch,
-        title: "Run coding agents on ready machines · #{brand}",
-        description:
-          "Give your product a coding agent on a ready machine. Repositories, packages " <>
-            "and credentials arrive with it, and you pay only while the agent works."
-      },
-      %{
         path: "/oss-launch",
         template: :oss_launch,
         title: "A conversational API to a computer · #{engine}",
@@ -49,31 +41,21 @@ defmodule Site.Build do
             "under your control."
       },
       %{
-        path: "/buzz-launch",
-        template: :buzz_launch,
-        title: "Hosted Buzz agents · #{brand}",
-        description:
-          "Keep your Buzz agent on the relay without keeping your laptop open. " <>
-            "#{brand} wakes a sandbox for accepted mentions and keeps " <>
-            "the Nostr key on the server."
-      },
-      %{
         path: "/integrations",
         template: :integrations,
         title: "Coding agent integrations · #{brand}",
         description:
-          "Run coding agents from your editor, chat app or code. " <>
-            "#{brand} manages ready sandboxes and charges only while agents work."
+          "Run coding agents from your editor, chat app or code on sandboxes " <>
+            "that keep their work between messages."
       },
       %{
         path: "/faq",
         template: :faq,
         title: "Questions · #{brand}",
         description:
-          "What a developer, a buyer and a security reviewer ask before building " <>
-            "on #{brand}: model keys, what a sandbox does between " <>
-            "messages, tenant isolation, what it costs, what we do not have, and " <>
-            "what it takes to run the whole thing yourself."
+          "What a developer and a security reviewer ask about #{brand}: model " <>
+            "keys, what a sandbox does between messages, tenant isolation, what " <>
+            "it does not have, and what it takes to run the whole thing yourself."
       },
       %{
         path: "/built-with",

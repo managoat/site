@@ -4,7 +4,7 @@ defmodule Site.Pages do
 
   Moved from `FountainWeb.MarketingHTML` in the fountain repo, where the same
   templates were rendered per request. Everything the app read at request
-  time is a constant here (`Site.Brand`, `Site.Pricing`); the rest of the
+  time is a constant here (`Site.Brand`); the rest of the
   module was literal data already.
   """
   use Phoenix.Component
@@ -286,127 +286,6 @@ defmodule Site.Pages do
     ]
   end
 
-  @doc "The two-turn launch example, kept out of the template so its braces are not HEEx."
-  def launch_example do
-    """
-    import { Fountain } from "@managoat/fountain-sdk";
-
-    const fountain = new Fountain(); // FOUNTAIN_API_KEY
-
-    const first = await fountain.run(
-      "Add a --version flag and open a PR",
-      { agent: "tour-contributor", vault: "tour-github" }
-    );
-
-    const revision = await fountain
-      .resume(first.conversationId)
-      .send("Also accept -v as an alias. Push it to the same PR.");\
-    """
-  end
-
-  ## The Buzz campaign page
-  #
-  # Every claim on /buzz-launch is the marketing register of a sentence in
-  # docs/integrations/buzz.md, which was written against the code (ADR 0020).
-  # The page must not outrun the manual: a claim that is not on that page does
-  # not belong here either.
-
-  @doc """
-  One turn of a hosted Buzz agent, from mention to signed reply.
-
-  The asymmetry between steps 3 and 4 is the integration's defining fact: the
-  harness never publishes the agent's own text, so the MCP tool is the whole
-  outbound path and the key never leaves the server.
-  docs/integrations/buzz.md carries the same sequence as a diagram.
-  """
-  def buzz_turn_steps do
-    [
-      %{
-        n: 1,
-        title: "A mention reaches Fountain.",
-        body:
-          "An allowed sender @-mentions the agent in a channel. The hosted harness " <>
-            "picks it up from the relay with no laptop in the path."
-      },
-      %{
-        n: 2,
-        title: "Fountain wakes the agent.",
-        body:
-          "Fountain starts or resumes a sandbox built from the bound agent's " <>
-            "Environment, then drives the turn over ACP."
-      },
-      %{
-        n: 3,
-        title: "The agent chooses to reply.",
-        body:
-          "It calls buzz_send_message, a Fountain-hosted MCP tool. The sandbox has " <>
-            "no relay connection or signing key, so the call is the only path to " <>
-            "the channel."
-      },
-      %{
-        n: 4,
-        title: "Fountain signs and sends.",
-        body:
-          "The reply is signed with the key in the vault and published as the " <>
-            "agent. The owner watches the whole turn from the Buzz desktop, over " <>
-            "encrypted telemetry."
-      }
-    ]
-  end
-
-  @doc """
-  Provisioning an identity over the API, for the reader who skips the desktop.
-
-  The shape is docs/integrations/buzz.md's worked example, trimmed to the
-  required fields. The nsec goes in and never comes back: the response carries
-  the identity's public fields alone, which is the fact the section around
-  this snippet is making. Kept out of the template so its braces are not HEEx.
-  """
-  def buzz_provision_example do
-    """
-    curl -X POST $FOUNTAIN_BASE_URL/api/buzz/agents \\
-      -H "Authorization: Bearer $FOUNTAIN_API_KEY" \\
-      -H "Content-Type: application/json" \\
-      -d '{
-        "name": "night-owl",
-        "agent_id": "<fountain agent uuid>",
-        "relay_url": "wss://relay.example.com",
-        "pubkey": "<64-hex nostr pubkey>",
-        "private_key_nsec": "nsec1…",
-        "auth_tag": "<owner attestation>"
-      }'\
-    """
-  end
-
-  @doc """
-  The three in-channel owner commands a hosted identity answers.
-
-  Only the attested owner can send them, verified through the NIP-OA
-  attestation rather than the display name. `!shutdown` is a restart rather
-  than a stop because the supervisor restarts an enabled identity; the page
-  says so instead of promising an off switch a mention does not have.
-  """
-  def buzz_owner_commands do
-    [
-      %{
-        command: "@Agent !rotate",
-        effect:
-          "Ends the channel's current conversation. The next mention starts clean, " <>
-            "with no redeploy."
-      },
-      %{
-        command: "@Agent !cancel",
-        effect: "Interrupts the turn in flight."
-      },
-      %{
-        command: "@Agent !shutdown",
-        effect:
-          "Exits the harness. Fountain restarts it while the identity remains " <>
-            "enabled. Delete the identity through the API to stop it permanently."
-      }
-    ]
-  end
-
   ## The security review
   #
   # What a builder's security reviewer asks, answered on the page. Every answer
@@ -536,60 +415,6 @@ defmodule Site.Pages do
         "built and running for one account. It is not something you can turn on yet, " <>
         "so assume the sandbox holds the values you give it."
     ]
-  end
-
-  @doc "Whether the pricing section renders at all: only where the deployment bills."
-  def pricing?, do: Site.Pricing.enabled?()
-
-  @doc "The opening credit a new account gets, and how long it lasts."
-  def opening_credit do
-    {cents, days} = Site.Pricing.opening()
-    {Site.Pricing.format_cents(cents), days}
-  end
-
-  @doc "The concurrency rule (ADR 0031), read from the same settings Quotas enforces."
-  def cap_rule do
-    %{reserve_cents: reserve, cap_floor: floor, cap_ceiling: ceiling} = Site.Pricing.settings()
-    {Site.Pricing.format_cents(reserve), floor, ceiling}
-  end
-
-  # The customer prices, read from the same card the ledger burns at, so the
-  # page cannot quote a number the meter does not charge (ADR 0030).
-  def turn_hour_price, do: Site.Pricing.format_cents(Site.Pricing.price_card().turn_hour)
-
-  def credit_packs do
-    Enum.map_join(Site.Pricing.packs(), ", ", &Site.Pricing.format_cents/1)
-  end
-
-  # Nil when this deployment charges nothing for a line, so the page says
-  # nothing about it rather than quoting $0.
-  def rent_line do
-    card = Site.Pricing.price_card()
-
-    parts =
-      [
-        card.number_month &&
-          "a phone number is #{Site.Pricing.format_cents(card.number_month)} a month",
-        card.inbox_month &&
-          "an email inbox is #{Site.Pricing.format_cents(card.inbox_month)} a month"
-      ]
-      |> Enum.reject(&is_nil/1)
-
-    if parts == [], do: nil, else: Enum.join(parts, " and ")
-  end
-
-  def message_line do
-    card = Site.Pricing.price_card()
-
-    parts =
-      [
-        card.email_message && "#{Site.Pricing.format_cents(card.email_message)} an email",
-        card.sms_message &&
-          "#{Site.Pricing.format_cents(card.sms_message)} a text, sent or received"
-      ]
-      |> Enum.reject(&is_nil/1)
-
-    if parts == [], do: nil, else: Enum.join(parts, " and ")
   end
 
   ## /integrations
@@ -1494,8 +1319,8 @@ defmodule Site.Pages do
   end
 
   @doc """
-  The features the hosted platform configures for you, and what each costs on
-  an instance of your own. The rows track `docs/reference/feature-status.md`; a
+  The features that ship behind configuration, and what each takes to turn on
+  in an instance of your own. The rows track `docs/reference/feature-status.md`; a
   feature that comes off that page comes off this one. Two have: teammate email
   and phone was removed, and the OpenAI-compatible API was retired with its
   `openai_compat` flag (fountain ADR 0057).
@@ -1506,7 +1331,6 @@ defmodule Site.Pages do
         name: "Connections",
         blurb:
           "Sign in to a provider once and the agent gets its tools. The OAuth token never enters the sandbox.",
-        hosted: "Alpha, behind a flag. Ask us to turn it on for your account.",
         yours:
           "Configure the credential broker and your provider apps, then add connections to FEATURE_FLAGS_ON.",
         docs: "/docs/catalog/connections"
@@ -1515,7 +1339,6 @@ defmodule Site.Pages do
         name: "Brokered credentials",
         blurb:
           "The real token never enters the sandbox. The broker attaches it on the way out, and the transcript keeps a placeholder.",
-        hosted: "On for every account.",
         yours:
           "Set BROKER_LISTEN_PORT and BROKER_PROXY_URL. Every account on the deployment is then brokered.",
         docs: "/docs/concepts/secrets"
@@ -1641,11 +1464,6 @@ defmodule Site.Pages do
           "Yes, and you always did. The agent bills your Anthropic, OpenAI or Google account for tokens. Nothing in the middle takes a cut of inference, hosted or not."
       },
       %{
-        q: "Can I try the hosted one first?",
-        a:
-          "Yes, and none of it is wasted. The console, the CLI and the API are the same on both, and so are the SDK and the manual. What changes is whose machine it runs on."
-      },
-      %{
         q: "How do I get rid of it?",
         a:
           "docker compose down -v. The -v flag deletes the database volume and " <>
@@ -1687,8 +1505,7 @@ defmodule Site.Pages do
         q: "Do I need a model key?",
         a:
           "Yes. Bring an Anthropic, OpenAI or Google key and the agent bills your own " <>
-            "account for tokens. #{Site.Brand.name()} charges for the sandbox hours, " <>
-            "never for inference, so there is no markup on the model.",
+            "account for tokens. Nothing in between marks up the model.",
         docs: "concepts/vault",
         docs_label: "Where a key lives"
       },
@@ -1725,10 +1542,8 @@ defmodule Site.Pages do
         q: "Can an agent start another agent, and how deep does that go?",
         a:
           "It can, and the agent it starts can do the same from inside its own " <>
-            "sandbox. Nothing caps the depth on our side, so the balance is the " <>
-            "backstop rather than a limit #{Site.Brand.name()} enforces. Treat a " <>
-            "spawning agent the way you would treat a recursive job anywhere else, and " <>
-            "watch the balance while you do."
+            "sandbox. Nothing caps the depth, so treat a spawning agent the way you " <>
+            "would treat a recursive job anywhere else."
       },
       %{
         q: "Is this only good for writing code?",
@@ -1741,8 +1556,8 @@ defmodule Site.Pages do
       %{
         q: "What happens to the sandbox between messages?",
         a:
-          "It parks. The filesystem, the checkout and the agent's memory survive, a " <>
-            "parked sandbox costs nothing, and it takes none of your concurrency. The " <>
+          "It parks. The filesystem, the checkout and the agent's memory survive, " <>
+            "and a parked sandbox takes none of your concurrency. The " <>
             "next message wakes it in seconds instead of minutes.",
         docs: "concepts/sandboxes",
         docs_label: "About sandboxes"
@@ -1777,51 +1592,7 @@ defmodule Site.Pages do
         "#{Site.Brand.engine()} is open source"
       end
 
-    "Yes. #{lead}, and you can run it on your own hardware, with your own sandboxes. " <>
-      "Nothing is held back for the people who pay."
-  end
-
-  @doc """
-  The billing questions, on a deployment that bills.
-
-  Every number comes from the price card the ledger burns at, so the page
-  cannot quote a rate the meter does not charge (ADR 0030).
-  """
-  def billing_faq do
-    {opening, days} = opening_credit()
-
-    [
-      %{
-        q: "What am I actually charged for?",
-        a:
-          "Agent time, at #{turn_hour_price()} an hour. An hour means an hour with a " <>
-            "prompt in flight, so a parked agent, an idle one and one running on your " <>
-            "own machine cost nothing. Two agents working for an hour on the same " <>
-            "machine are two hours."
-      },
-      %{
-        q: "Is there a plan, a seat or a subscription?",
-        a:
-          "None of the three. You hold a balance, work spends it, and you buy more " <>
-            "when you want more. New accounts start with #{opening} that expires in " <>
-            "#{days} days; credit you buy never expires."
-      },
-      %{
-        q: "What happens when the balance runs out?",
-        a:
-          "New work pauses and nothing dies. A new conversation or a new prompt is " <>
-            "refused until there is credit again, a turn already in flight finishes, " <>
-            "and your agents, environments and vaults are all still there.",
-        docs: "guides/operate/billing",
-        docs_label: "How billing works"
-      },
-      %{
-        q: "Do you take a cut of what the model costs?",
-        a:
-          "No. The key is yours and the model bills you directly. #{Site.Brand.name()} " <>
-            "never sees that invoice and never adds to it."
-      }
-    ]
+    "Yes. #{lead}, and you can run it on your own hardware, with your own sandboxes."
   end
 
   @doc """
@@ -1840,20 +1611,6 @@ defmodule Site.Pages do
         items: build_faq()
       }
     ]
-
-    billing =
-      if pricing?() do
-        [
-          %{
-            id: "billing",
-            title: "What it costs",
-            blurb: "Read from the same price card the ledger burns at.",
-            items: billing_faq()
-          }
-        ]
-      else
-        []
-      end
 
     security = [
       %{
@@ -1878,7 +1635,7 @@ defmodule Site.Pages do
       }
     ]
 
-    building ++ billing ++ security ++ self_hosting
+    building ++ security ++ self_hosting
   end
 
   ## /case-studies/self-healing-infrastructure
@@ -2316,7 +2073,7 @@ defmodule Site.Pages do
       %{
         normally: "A queue, so a busy morning drops no pull request.",
         here:
-          "One HTTP call per pull request. Concurrency is funded by the balance, and a full fleet answers 503."
+          "One HTTP call per pull request. Concurrency is capped, and a full fleet answers 503."
       },
       %{
         normally:

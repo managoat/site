@@ -20,8 +20,20 @@ defmodule Site.Brand do
   @doc "The engine it runs: the AGPL server, CLI and SDKs."
   def engine, do: @engine
 
-  @doc "True: this site sells a branded instance of the engine."
-  def hosted?, do: true
+  @doc """
+  False: the hosted instance is not offered to anyone, so the pages describe
+  the engine and point at the person who runs it rather than at a sign-up.
+  """
+  def hosted?, do: false
+
+  @doc "Who to talk to about the project. Every call to action on the site lands here."
+  def contact_name, do: "Jake"
+
+  @doc "The address behind `contact_name/0`."
+  def contact_email, do: "jhgaylor@gmail.com"
+
+  @doc "The `mailto:` link every call to action uses."
+  def contact_url, do: "mailto:" <> contact_email()
 
   @doc "The absolute URL of one file in the brand bundle."
   def asset(name) when name in @assets, do: @assets_url <> "/" <> name
