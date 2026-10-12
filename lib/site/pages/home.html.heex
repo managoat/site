@@ -4,7 +4,7 @@
       sections into one beat. `--color-ink-*` is the dark surface, and it does
       not invert with the theme: an ink section is dark in light mode, and in
       dark mode the same tokens lift it clear of the near-black page. Two
-      sections are ink, the manifest and the price, and they bracket the
+      sections are ink, the manifest and the finale, and they bracket the
       argument between them.
 
       Every section opens with `eyebrow/1`. Ten sections used to open with the
@@ -33,17 +33,15 @@
 
 <%!-- Hero --%>
 <section class="max-w-5xl mx-auto px-6 py-12 text-center" data-role="hero">
-  <%!-- On a branded hosted site, say what this is before the pitch. The engine
-        is open source and nothing is held back from it (ADR 0034), so a reader
-        who will never use the hosted product learns that in the first line
-        rather than at the bottom of the page. --%>
+  <%!-- Say what this is first. There is no hosted product to sign up for,
+        and the engine is open source (ADR 0034), so a reader learns in the
+        first line that what they can use is the code. --%>
   <p
-    :if={Site.Brand.hosted?()}
     class="mb-5 inline-flex items-center gap-2 rounded-full border border-[var(--color-border)] bg-[var(--color-bg-1)] px-3.5 py-1.5 text-xs text-[var(--color-text-secondary)]"
     data-role="hosted-brand"
   >
     <span class="size-1.5 rounded-full bg-[var(--color-accent)]" aria-hidden="true"></span>
-    {Site.Brand.name()} is the hosted {Site.Brand.engine()}. The engine is open source and you can run it yourself.
+    {Site.Brand.name()} runs on {Site.Brand.engine()}, an open-source server you can run yourself.
   </p>
   <%!-- The h1 is the largest thing on the page by a clear margin. It used to
         be `text-5xl`, one step off the section headings, so the page opened at
@@ -98,12 +96,6 @@
       Build with the API
     </a>
   </div>
-  <p :if={pricing?()} class="text-xs text-[var(--color-text-muted)]">
-    {elem(opening_credit(), 0)} of credit to start, no card. Bring your own model key: you pay for agent time, never tokens.
-  </p>
-  <p :if={!pricing?()} class="text-xs text-[var(--color-text-muted)]">
-    Free to use on this install.
-  </p>
 </section>
 
 <%!-- The apps lead the page. The catalog owns their names, destinations and
@@ -180,13 +172,13 @@
 
 <section class="max-w-5xl mx-auto px-6 pb-16 text-center" data-role="machine-story">
   <h2 class="text-2xl sm:text-3xl font-semibold text-[var(--color-text-primary)]">
-    Run coding agents on ready machines.<span :if={pricing?()}> Pay only while they work.</span>
+    Coding agents on ready machines.
   </h2>
   <p class="mt-4 text-lg text-[var(--color-text-secondary)] max-w-2xl mx-auto">
     Your repositories, packages and credentials arrive with the machine.
     It parks between prompts and wakes with its work intact.
     <a href="/self-hosted" class="underline underline-offset-2">Run your own instance</a>
-    or use the hosted service.
+    to try it.
   </p>
 </section>
 
@@ -461,9 +453,9 @@
       left margin; a centred heading over left-aligned prose gives the eye two
       starting points and it uses neither. --%>
 <section class="max-w-5xl mx-auto px-6 py-16">
-  <.eyebrow label="What you get" align={:left} />
+  <.eyebrow label="Underneath" align={:left} />
   <h2 class="mt-4 text-2xl sm:text-3xl font-semibold tracking-tight text-[var(--color-text-primary)] max-w-3xl">
-    You did not set out to run a sandbox platform. We did.
+    What runs underneath the agent.
   </h2>
   <p class="mt-3 text-[var(--color-text-secondary)] max-w-2xl text-lg">
     The agent is only the visible part.
@@ -540,8 +532,7 @@
         rather than as a coworker they message. The key is `channel_id`
         (`Conversations.start_or_resume_conversation/2`); it resumes a
         conversation for the same Agent, Environment and Vault rather than
-        acting as a global unique key. What parking *costs* belongs to the
-        pricing section, not here.
+        acting as a global unique key.
 
         The memory boundary names the default ephemeral mode. A persistent
         sandbox survives the end of one conversation, which is the second
@@ -684,148 +675,6 @@
   </p>
 </section>
 
-<%!-- FORK TWO, and the finale, on ink: what it costs, how to owe us nothing,
-      what it cannot do, then the ask.
-
-      Pricing used to sit *after* the closing call to action, so the page said
-      goodbye and then kept talking about money. It now answers the last
-      questions a convinced reader has and hands them the button underneath
-      them.
-
-      Self-host is the other half of the price. "What does this cost" and "what
-      if I would rather it cost nothing and run on my own hardware" are one
-      question with two answers, so they share a surface.
-
-      Questions is last before the ask, because a limit is the final thing
-      between a convinced reader and the button. The single link opens the full
-      set of answers rather than making the reader choose between two routes to
-      the same page.
-
-      Four sections sharing one surface rather than one section, because a
-      deployment that prices nothing renders no pricing and the rest has to
-      stand without it. It does: same ink, same ask, no seam where the price
-      would have been. That is also why the self-host heading no longer opens
-      with "Or". With `pricing?()` false there is nothing above it for the "Or"
-      to answer. --%>
-
-<%!-- Pricing (ADR 0031): credits are the product. Rendered only where the
-      deployment bills, so a self-hosted instance shows nothing. The two cards
-      answer the first questions a buyer has: the rate and what it costs to
-      try. Concurrency is an operating limit rather than a third price, so it
-      sits under "How billing works" with the rest of the mechanics.
-
-      The h2 used to read "Pay for what your agents do", which nobody would
-      expect to be false. A pricing heading that states the ordinary case has
-      spent itself: of course you pay for what they do. The claim worth making
-      is the word "only", and it is the differentiator
-      .agents/product-marketing.md says to lead with, because a sandbox
-      provider rents a box by the hour whether or not anybody is talking to it.
-
-      The deck names the prepaid model and defines when the meter moves. The
-      first card defines an agent hour and makes concurrent work additive. The
-      detail below handles purchased credit, inference, contacts, concurrency
-      and the zero-balance boundary once each. --%>
-<section :if={pricing?()} id="pricing" class="bg-[var(--color-ink-0)]">
-  <div class="max-w-5xl mx-auto px-6 py-16">
-    <.eyebrow label="Pricing" tone={:ink} />
-    <h2 class="mt-4 text-2xl sm:text-3xl font-semibold tracking-tight text-center text-[var(--color-ink-text)]">
-      You pay only while an agent is working.
-    </h2>
-    <p class="mt-3 text-center text-[var(--color-ink-secondary)] max-w-xl mx-auto text-lg">
-      No plans, no seats, no subscription. Buy prepaid credit and spend it only while a prompt is in flight.
-    </p>
-
-    <div class="mt-12 grid gap-6 md:grid-cols-2 max-w-3xl mx-auto">
-      <div class="rounded-xl border border-[var(--color-ink-border)] bg-[var(--color-ink-1)] p-7">
-        <p
-          class="text-4xl font-semibold tracking-tight text-[var(--color-ink-text)]"
-          data-role="figure"
-        >
-          {turn_hour_price()}
-        </p>
-        <p class="mt-2 text-sm font-medium text-[var(--color-ink-text)]">
-          per active agent hour
-        </p>
-        <p class="mt-3 text-xs leading-relaxed text-[var(--color-ink-secondary)]">
-          One agent hour is one hour with a prompt in flight. Two agents working
-          for an hour use two agent hours. Parked and idle agents cost nothing.
-        </p>
-      </div>
-      <%!-- The free grant is the one card a reader is looking for, so it is
-            the one carrying the accent. --%>
-      <div class="rounded-xl border border-[var(--color-accent)] bg-[var(--color-ink-1)] p-7">
-        <p
-          class="text-4xl font-semibold tracking-tight text-[var(--color-accent)]"
-          data-role="figure"
-        >
-          {elem(opening_credit(), 0)}
-        </p>
-        <p class="mt-2 text-sm font-medium text-[var(--color-ink-text)]">
-          free credit to start
-        </p>
-        <p class="mt-3 text-xs leading-relaxed text-[var(--color-ink-secondary)]">
-          No card required. Starter credit expires after {elem(opening_credit(), 1)} days.
-        </p>
-      </div>
-    </div>
-
-    <p class="mt-8 text-center">
-      <a
-        href="/auth/register"
-        class="inline-flex items-center justify-center px-6 py-3 rounded-lg border border-[var(--color-ink-border)] bg-[var(--color-ink-1)] text-[var(--color-ink-text)] text-sm font-medium hover:bg-[var(--color-ink-2)] transition-colors"
-      >
-        Start with {elem(opening_credit(), 0)} free
-      </a>
-    </p>
-
-    <%!-- How the money works, answered where the question is asked rather
-          than on the billing page a visitor cannot see yet. Every number here
-          is read from the same config the meter charges at (ADR 0030). --%>
-    <div id="how-billing-works" class="mt-12 max-w-2xl mx-auto">
-      <h3 class="text-sm font-semibold uppercase tracking-[0.14em] text-center text-[var(--color-ink-secondary)]">
-        How billing works
-      </h3>
-      <div class="mt-6 space-y-4 text-sm text-[var(--color-ink-secondary)] leading-relaxed">
-        <p>
-          <span class="font-medium text-[var(--color-ink-text)]">
-            Purchased credit never expires.
-          </span>
-          Fountain uses your starter credit first. Add credit in packs of {credit_packs()}.
-        </p>
-        <p>
-          <span class="font-medium text-[var(--color-ink-text)]">
-            Bring your own model key.
-          </span>
-          Fountain bills agent time, not inference. Your model provider bills its usage separately.
-        </p>
-        <p :if={rent_line() || message_line()}>
-          <span class="font-medium text-[var(--color-ink-text)]">
-            Teammate contacts come out of the same balance.
-          </span>
-          <span :if={rent_line()}>{String.capitalize(rent_line())}, billed in advance.</span>
-          <span :if={message_line()}>Messages are {message_line()}.</span>
-        </p>
-        <p>
-          <span class="font-medium text-[var(--color-ink-text)]">
-            Your balance sets your concurrency.
-          </span>
-          Each {elem(cap_rule(), 0)} in your balance supports one agent working at a time,
-          with a minimum of {elem(cap_rule(), 1)} and a maximum of {elem(cap_rule(), 2)}.
-          An API start beyond your limit can ask to wait in a bounded queue, and a scheduled run
-          waits by itself. The queue delays the cap; it never raises it.
-        </p>
-        <p>
-          <span class="font-medium text-[var(--color-ink-text)]">
-            At zero, new work pauses.
-          </span>
-          You cannot start a conversation or send another prompt until you add credit.
-          Work already in flight finishes, even if the balance goes negative.
-        </p>
-      </div>
-    </div>
-  </div>
-</section>
-
 <%!-- Lane three's section on the homepage. The runner concession sits beside
       the runner claim rather than a page away, because the hero promises a
       boundary and the default runner backend has none.
@@ -844,16 +693,19 @@
       The runner note keeps its own rule and its own beat because the default
       process backend is a concession, not the offer. It also names the
       Firecracker override now that trusted mode is no longer the runner's only
-      backend. The limit and the safer boundary sit in the same place. --%>
+      backend. The limit and the safer boundary sit in the same place.
+
+      It opens the ink finale now that the pricing above it is gone, so it
+      takes the band edge as its top and carries no rule of its own. --%>
 <section class="bg-[var(--color-ink-0)]">
   <div class="max-w-5xl mx-auto px-6 pb-16">
-    <div class="border-t border-[var(--color-ink-border)] pt-16">
+    <div class="pt-16">
       <.eyebrow label="Self-host" tone={:ink} />
       <h2 class="mt-4 text-2xl sm:text-3xl font-semibold tracking-tight text-[var(--color-ink-text)] text-center">
         Own as much of the stack as you want.
       </h2>
       <p class="mt-3 text-center text-[var(--color-ink-secondary)] max-w-xl mx-auto text-lg">
-        Keep the same API, SDK and CLI. Run Fountain and Postgres in your account, or keep hosted Fountain and connect machines from your network.
+        The same API, SDK and CLI. Run Fountain and Postgres in your own account, and connect machines from your network.
       </p>
 
       <div class="mt-10 max-w-2xl mx-auto space-y-4 text-[var(--color-ink-secondary)] leading-relaxed">
@@ -861,13 +713,13 @@
           <strong class="font-medium text-[var(--color-ink-text)]">
             Run the control plane yourself.
           </strong>
-          {Site.Brand.engine()} is open source. Docker Compose brings up Fountain and Postgres, while plain Kubernetes manifests run the same release image as hosted Fountain.
+          {Site.Brand.engine()} is open source. Docker Compose brings up Fountain and Postgres, while plain Kubernetes manifests run the same release image.
         </p>
         <p>
           <strong class="font-medium text-[var(--color-ink-text)]">
             Bring your own sandbox compute.
           </strong>
-          A runner dials out from your network, opens no inbound port, and uses no Fountain credit for agent time.
+          A runner dials out from your network and opens no inbound port.
         </p>
         <p class="border-l-2 border-[var(--color-ink-border)] pl-4 text-sm text-[var(--color-ink-secondary)]">
           By default, a runner uses trusted mode. The agent runs as you, with your network and tools and no container between. Use it where you would hand a colleague a shell, or use the Firecracker backend on Linux with KVM for a microVM boundary.
@@ -938,54 +790,30 @@
   </div>
 </section>
 
-<%!-- Footer CTA. The last thing on the page, which is what a closer is.
-
-      The h2 names the job the reader came to do. The "What you get" grid used
-      to close on "You keep the product", which was a recap sitting under the
-      six cards that had just said it. Here the outcome becomes the ask.
-
-      It used to read "A key, a call, and a machine you did not build", three
-      nouns in a row that named the ingredients rather than the payoff. The
-      machine you did not build is also the page's third telling of that idea
-      by this point.
-
-      The deck is one sentence and four steps. It was three sentences: the
-      steps, then a list of things that do not happen (no machine to provision,
-      no card, nothing that renews), then the payoff. The middle sentence is
-      the hero's own fine print and the price card's. The new line gives the
-      four steps a concrete finish instead.
-
-      It says "model key", the phrase the other five marketing mentions use,
-      and it names no surface. The protocols section a screen above ends
-      "Whatever you use starts an agent with a URL and a key", so a closer that
-      said "with the SDK" would narrow the promise the page had just widened,
-      and the SDK is TypeScript while the API is not.
-
-      On ink the primary button is `--color-ink-brand`, which is the brand blue
-      the dark theme already uses. `--color-brand` is #0b5acc and would be a
-      dark button on a near-black ground. --%>
-<section class={[
-  "bg-[var(--color-ink-0)]",
-  pricing?() && "border-t border-[var(--color-ink-border)]"
-]}>
+<%!-- Footer CTA. There is nothing to sign up for, so the ask is a
+      conversation: the person who runs it, then the manual. On ink the primary
+      button is `--color-ink-brand`, which is the brand blue the dark theme
+      already uses. `--color-brand` is #0b5acc and would be a dark button on a
+      near-black ground. --%>
+<section class="bg-[var(--color-ink-0)] border-t border-[var(--color-ink-border)]">
   <div class="max-w-5xl mx-auto px-6 py-20 text-center">
     <h2 class="text-3xl sm:text-4xl font-bold tracking-tight text-[var(--color-ink-text)] mb-4">
-      Give your product a coding agent.
+      Want to learn more?
     </h2>
     <p class="text-[var(--color-ink-secondary)] mb-9 max-w-lg mx-auto text-lg leading-relaxed">
-      Sign up, paste a model key, configure your agent, and start each run with one API call.
+      {Site.Brand.name()} is not open for sign-ups. If you are curious about it, or about running {Site.Brand.engine()} yourself, {Site.Brand.contact_name()} is happy to talk.
     </p>
     <a
-      href="/auth/register"
+      href={Site.Brand.contact_url()}
       class="inline-flex items-center justify-center px-8 py-3.5 rounded-lg bg-[var(--color-ink-brand)] text-[var(--color-ink-0)] font-semibold hover:opacity-90 transition-opacity"
     >
-      Run your first agent free
+      Contact {Site.Brand.contact_name()}
     </a>
     <p class="mt-5 text-sm text-[var(--color-ink-secondary)]">
-      Already have an account? <a
-        href="/auth/login"
+      Or <a
+        href="/docs"
         class="underline underline-offset-2 hover:text-[var(--color-ink-text)]"
-      >Sign in</a>.
+      >read the manual</a>.
     </p>
   </div>
 </section>

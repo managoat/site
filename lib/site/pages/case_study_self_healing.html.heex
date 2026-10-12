@@ -286,7 +286,7 @@
     </div>
   </div>
   <p class="text-center text-[var(--color-text-secondary)] max-w-2xl mx-auto mt-12">
-    {Site.Brand.name()} builds the sandbox for the run and parks it between prompts without discarding the checkout. Parked machines cost nothing. <a
+    {Site.Brand.name()} builds the sandbox for the run and parks it between prompts without discarding the checkout. <a
       href="/docs/primitives"
       class="underline underline-offset-2 hover:text-[var(--color-text-primary)]"
     >Read about the four primitives</a>.
@@ -348,14 +348,14 @@
     Some alerts end in a small repository change.
   </h2>
   <p class="text-[var(--color-text-secondary)] mb-8 max-w-lg mx-auto">
-    The work starts with reading the evidence and ends with a diff somebody approves. Start an agent for the middle.
+    The work starts with reading the evidence and ends with a diff somebody approves. An agent can do the middle. Ask {Site.Brand.contact_name()} how this one is set up.
   </p>
   <div class="flex flex-col sm:flex-row gap-3 justify-center">
     <a
-      href="/auth/register"
+      href={Site.Brand.contact_url()}
       class="inline-flex items-center justify-center px-6 py-3 rounded-lg bg-[var(--color-brand)] text-white font-medium hover:bg-[var(--color-brand-hover)] transition-colors text-sm"
     >
-      Run your first agent free
+      Contact {Site.Brand.contact_name()}
     </a>
     <a
       href="/docs/concepts/teammates"

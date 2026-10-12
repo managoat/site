@@ -21,9 +21,7 @@ spec:
     # nginx sends the slashed form to the clean URL, so both must land here.
     - match: >-
         Host(`managoat.com`) && (Path(`/`) ||
-        Path(`/launch`) || Path(`/launch/`) ||
         Path(`/oss-launch`) || Path(`/oss-launch/`) ||
-        Path(`/buzz-launch`) || Path(`/buzz-launch/`) ||
         Path(`/integrations`) || Path(`/integrations/`) ||
         Path(`/built-with`) || Path(`/built-with/`) ||
         Path(`/self-hosted`) || Path(`/self-hosted/`) ||

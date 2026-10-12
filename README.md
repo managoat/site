@@ -1,8 +1,8 @@
 # managoat.com
 
-The marketing pages of [managoat.com](https://managoat.com): the homepage,
-the launch pages, integrations, built-with, self-host, the questions page
-and the case study. Ten pages, rendered to static HTML and served by nginx
+The pages of [managoat.com](https://managoat.com): the homepage, the
+open-source launch page, integrations, built-with, self-host, the questions
+page, the case study and the code review bot. Eight pages, rendered to static HTML and served by nginx
 behind the same host as the product.
 
 They used to be Phoenix templates inside
@@ -17,8 +17,10 @@ the engine's test suite and rebuild its image.
   they render. Both came over from the fountain repo nearly verbatim.
 - `lib/site/layouts/` is the header, the footer and the `<head>`.
 - What the app read at request time is a constant here: `Site.Brand` (the
-  name, the asset bundle) and `Site.Pricing` (the numbers the pricing copy
-  quotes, which must match the deployment's `CREDIT_*` and `SANDBOX_*`).
+  name, the asset bundle, and who to contact).
+- The hosted instance is not offered, so there is no pricing and no sign-up.
+  Every call to action is `Site.Brand.contact_url/0`, a mail to Jake, and
+  the tests fail if a page links `/auth/register` or `/auth/login`.
 - `mix site.build` renders everything into `dist/`; `mix test` checks it;
   `mix site.check_links` asks managoat.com whether every link into the manual
   still answers.

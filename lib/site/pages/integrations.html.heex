@@ -5,14 +5,14 @@
     Your tools start the agent. {Site.Brand.name()} runs the machine.
   </h1>
   <p class="text-lg sm:text-xl text-[var(--color-text-secondary)] max-w-2xl mx-auto mb-10">
-    Connect your editor, chat app or code to a coding agent on a ready sandbox. {Site.Brand.name()} provisions the machine, preserves its work between messages and parks it when the agent stops. No machine to manage. No idle time to pay for.
+    Connect your editor, chat app or code to a coding agent on a ready sandbox. {Site.Brand.name()} provisions the machine, preserves its work between messages and parks it when the agent stops.
   </p>
   <div class="flex flex-col sm:flex-row gap-3 justify-center mb-8">
     <a
-      href="/auth/register"
+      href={Site.Brand.contact_url()}
       class="inline-flex items-center justify-center px-6 py-3 rounded-lg bg-[var(--color-brand)] text-white font-medium hover:bg-[var(--color-brand-hover)] transition-colors text-sm shadow-sm"
     >
-      Run your first agent free
+      Contact {Site.Brand.contact_name()}
     </a>
     <a
       href="/docs/integrations/clients"
@@ -40,7 +40,7 @@
       Start from what you have.
     </h2>
     <p class="text-center text-[var(--color-text-secondary)] max-w-xl mx-auto mb-12">
-      Choose the starting point that matches your stack. Each example works with the hosted service or an instance you run yourself.
+      Choose the starting point that matches your stack. Each example works against an instance you run yourself.
     </p>
     <div class="grid md:grid-cols-2 gap-6">
       <div
@@ -196,10 +196,10 @@
   </p>
   <div class="flex flex-col sm:flex-row gap-3 justify-center">
     <a
-      href="/auth/register"
+      href={Site.Brand.contact_url()}
       class="inline-flex items-center justify-center px-6 py-3 rounded-lg bg-[var(--color-brand)] text-white font-medium hover:bg-[var(--color-brand-hover)] transition-colors text-sm"
     >
-      Run your first agent free
+      Contact {Site.Brand.contact_name()}
     </a>
     <a
       href="/docs/integrations/clients"
