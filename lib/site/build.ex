@@ -10,7 +10,7 @@ defmodule Site.Build do
   `try_files` serves without a redirect.
   """
 
-  @site_title "A goat that talks to sprites"
+  @site_title "Claude Code, Codex and Gemini CLI behind one API"
 
   @doc "The description a page uses when it sets none: the pitch."
   def default_description do

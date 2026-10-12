@@ -1,6 +1,6 @@
 defmodule Site.Assets do
   @moduledoc """
-  The three stylesheets and the images the pages link, under `/site/`.
+  The two stylesheets and the images the pages link, under `/site/`.
 
   The prefix keeps them off paths the app serves on the same host (`/assets/`
   and `/images/` are the app's). The stylesheets carry a content hash in the
@@ -12,10 +12,8 @@ defmodule Site.Assets do
   @priv Path.expand("../../priv/site", __DIR__)
   @tokens Path.join(@priv, "tokens.css")
   @paper Path.join(@priv, "paper.css")
-  @fun Path.join(@priv, "fun.css")
   @external_resource @tokens
   @external_resource @paper
-  @external_resource @fun
 
   @tokens_hash :sha256
                |> :crypto.hash(File.read!(@tokens))
@@ -25,10 +23,6 @@ defmodule Site.Assets do
               |> :crypto.hash(File.read!(@paper))
               |> Base.encode16(case: :lower)
               |> binary_part(0, 8)
-  @fun_hash :sha256
-            |> :crypto.hash(File.read!(@fun))
-            |> Base.encode16(case: :lower)
-            |> binary_part(0, 8)
 
   @doc "The source directory copied into the build."
   def priv, do: @priv
@@ -39,11 +33,8 @@ defmodule Site.Assets do
   @doc "Published path of the paper skin."
   def paper_css, do: "/site/paper.#{@paper_hash}.css"
 
-  @doc "Published path of the goat-and-sprites scene."
-  def fun_css, do: "/site/fun.#{@fun_hash}.css"
-
   @doc "Source file and published path for each hashed stylesheet."
   def stylesheets do
-    [{@tokens, tokens_css()}, {@paper, paper_css()}, {@fun, fun_css()}]
+    [{@tokens, tokens_css()}, {@paper, paper_css()}]
   end
 end
