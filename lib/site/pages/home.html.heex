@@ -50,7 +50,7 @@
     Chat with Claude Code, Codex or Gemini CLI. Watch it work.
   </h1>
   <p class="text-lg sm:text-xl leading-relaxed text-[var(--color-text-secondary)] max-w-2xl mx-auto mb-10">
-    Open Conversations to give an agent a task, follow its tools and changes, and send a follow-up.
+    Give an agent a task, follow its tools and changes, and send a follow-up.
     Each conversation has a real computer that keeps its files between prompts.
   </p>
   <figure class="mb-8" data-role="product-screenshots">
@@ -84,14 +84,8 @@
   </figure>
   <div class="flex flex-col sm:flex-row gap-3 justify-center mb-5">
     <a
-      href="https://fountain-conversations.demo.managoat.com/"
-      class="inline-flex items-center justify-center px-6 py-3 rounded-lg bg-[var(--color-brand)] text-white font-medium hover:bg-[var(--color-brand-hover)] transition-colors text-sm shadow-sm"
-    >
-      Open Conversations
-    </a>
-    <a
       href="/docs/tour"
-      class="inline-flex items-center justify-center px-6 py-3 rounded-lg border border-[var(--color-border-strong)] bg-[var(--color-bg-1)] text-[var(--color-text-primary)] font-medium hover:bg-[var(--color-bg-2)] transition-colors text-sm"
+      class="inline-flex items-center justify-center px-6 py-3 rounded-lg bg-[var(--color-brand)] text-white font-medium hover:bg-[var(--color-brand-hover)] transition-colors text-sm shadow-sm"
     >
       Build with the API
     </a>
@@ -141,8 +135,11 @@
         <p class="mt-2 text-sm text-[var(--color-text-secondary)] leading-relaxed flex-1">
           {app.flagship.homepage}
         </p>
+        <%!-- The homepage sends nobody into the Conversations demo; its card
+              keeps the source link and leaves the app to /built-with. --%>
         <div class="mt-5 flex flex-wrap items-center gap-4">
           <a
+            :if={app.id != "fountain-conversations"}
             href={app.url}
             rel="noopener"
             class="inline-flex items-center px-4 py-2 rounded-lg bg-[var(--color-brand)] text-white font-medium hover:bg-[var(--color-brand-hover)] transition-colors text-sm"
