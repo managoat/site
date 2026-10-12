@@ -1179,12 +1179,6 @@ defmodule Site.Pages do
         href: "/docs/guides/operate/deploy"
       },
       %{
-        name: "Render",
-        slug: "render",
-        body: "Fork the repo and let render.yaml create the web service and managed Postgres.",
-        href: "/docs/guides/operate/render"
-      },
-      %{
         name: "Fly.io",
         slug: "flydotio",
         body:
