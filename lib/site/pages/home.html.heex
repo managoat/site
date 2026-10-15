@@ -544,7 +544,7 @@
         Bind a conversation to a customer, ticket or Slack channel id. Send that id with the same Agent, Environment and Vault to resume the live conversation. You do not store or look up a {Site.Brand.name()} conversation id.
       </p>
       <p>
-        Between prompts, the sandbox parks with its files intact. The next message or a scheduled run wakes it.
+        Between prompts, the sandbox parks with its files intact. The next message wakes it.
       </p>
       <p>
         In the default mode, the disk belongs to that conversation. End the conversation and its workspace goes with it.
@@ -648,19 +648,19 @@
 
     <div class="sm:flex sm:gap-8 py-5 first:pt-0 last:pb-0">
       <dt class="font-medium text-[var(--color-text-primary)] sm:w-56 sm:shrink-0">
-        MCP, both directions
+        MCP servers
       </dt>
       <dd class="mt-1 sm:mt-0 text-sm text-[var(--color-text-secondary)] leading-relaxed">
-        Let agents use the servers you declare, then expose the roster so they can delegate to each other.
+        Let agents use the stdio and HTTP servers you declare on them, run in their own sandboxes.
       </dd>
     </div>
 
     <div class="sm:flex sm:gap-8 py-5 first:pt-0 last:pb-0">
       <dt class="font-medium text-[var(--color-text-primary)] sm:w-56 sm:shrink-0">
-        REST, SSE and webhooks
+        REST and SSE
       </dt>
       <dd class="mt-1 sm:mt-0 text-sm text-[var(--color-text-secondary)] leading-relaxed">
-        Start a conversation, stream its blocks and receive a signed webhook when the turn ends, from your own code, an SDK or the CLI.
+        Start a conversation and stream its blocks until the turn ends, from your own code, the TypeScript SDK or the CLI.
       </dd>
     </div>
   </dl>
@@ -672,25 +672,16 @@
   </p>
 </section>
 
-<%!-- Lane three's section on the homepage. The runner concession sits beside
-      the runner claim rather than a page away, because the hero promises a
-      boundary and the default runner backend has none.
-
-      The section used to promise "the whole thing" while naming two paths:
-      self-host the control plane, or keep the hosted control plane and attach
-      runners. It also made "own hardware" the boundary, which excluded an
-      operator running Fountain in a cloud account. Ownership is the common
-      decision, so the heading and deck name how much of the stack the reader
-      wants to own and where each part runs.
+<%!-- Lane three's section on the homepage. Ownership is the decision, so the
+      heading and deck name how much of the stack the reader wants to own and
+      where each part runs.
 
       The two paragraphs scan as parallel choices and replace "nothing is held
       back" with things a reader can verify: open source, the compose bring-up,
-      the Kubernetes manifests and the shared release image.
-
-      The runner note keeps its own rule and its own beat because the default
-      process backend is a concession, not the offer. It also names the
-      Firecracker override now that trusted mode is no longer the runner's only
-      backend. The limit and the safer boundary sit in the same place.
+      the Kubernetes manifests and the shared release image. The second used
+      to offer a self-hosted runner on the reader's own hardware; Fountain
+      removed the runner in 2026-10, so sandboxes run at a provider and the
+      paragraph says which.
 
       It opens the ink finale now that the pricing above it is gone, so it
       takes the band edge as its top and carries no rule of its own. --%>
@@ -702,7 +693,7 @@
         Own as much of the stack as you want.
       </h2>
       <p class="mt-3 text-center text-[var(--color-ink-secondary)] max-w-xl mx-auto text-lg">
-        The same API, SDK and CLI. Run Fountain and Postgres in your own account, and connect machines from your network.
+        The same API, SDK and CLI. Run Fountain and Postgres in your own account, and choose the sandbox provider.
       </p>
 
       <div class="mt-10 max-w-2xl mx-auto space-y-4 text-[var(--color-ink-secondary)] leading-relaxed">
@@ -714,12 +705,9 @@
         </p>
         <p>
           <strong class="font-medium text-[var(--color-ink-text)]">
-            Bring your own sandbox compute.
+            Bring your own sandbox account.
           </strong>
-          A runner dials out from your network and opens no inbound port.
-        </p>
-        <p class="border-l-2 border-[var(--color-ink-border)] pl-4 text-sm text-[var(--color-ink-secondary)]">
-          By default, a runner uses trusted mode. The agent runs as you, with your network and tools and no container between. Use it where you would hand a colleague a shell, or use the Firecracker backend on Linux with KVM for a microVM boundary.
+          Sandboxes run at Sprites or E2B under a token your instance holds, and the provider bills you for the machines.
         </p>
       </div>
 

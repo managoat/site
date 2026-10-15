@@ -17,7 +17,7 @@ defmodule Site.Brand do
   @doc "The hosted product."
   def name, do: @name
 
-  @doc "The engine it runs: the AGPL server, CLI and SDKs."
+  @doc "The engine it runs: the Apache-2.0 server, CLI and SDK."
   def engine, do: @engine
 
   @doc """

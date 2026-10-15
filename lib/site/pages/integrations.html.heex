@@ -84,26 +84,6 @@
   <div class="space-y-6">
     <.protocol_card :for={protocol <- client_protocols()} protocol={protocol} />
   </div>
-  <%!-- The two cards that used to sit here. Their anchors stay so an old link
-        lands on the explanation, and the loss is stated rather than implied:
-        nothing native lets a stock client connect with no code. --%>
-  <p
-    id="openai"
-    class="mt-10 text-center text-sm text-[var(--color-text-muted)] max-w-2xl mx-auto scroll-mt-6"
-    data-role="retired-protocols"
-  >
-    <span id="agui"></span>
-    {Site.Brand.name()} no longer serves the
-    <a
-      href="/docs/integrations/openai-compatible"
-      class="underline underline-offset-2 hover:text-[var(--color-text-primary)]"
-    >OpenAI-compatible API</a>
-    or <a
-      href="/docs/integrations/openbot"
-      class="underline underline-offset-2 hover:text-[var(--color-text-primary)]"
-    >AG-UI</a>.
-    Changing a base URL does not move a client that used them. Each page says what to build on instead, and how to keep a thread you already have.
-  </p>
 </section>
 
 <%!-- Tools --%>
@@ -124,7 +104,7 @@
         Keep service credentials out of the sandbox.
       </h3>
       <p class="mt-2 text-sm text-[var(--color-text-secondary)]">
-        On hosted accounts with the egress broker enabled, {Site.Brand.name()} replaces each bound credential with a placeholder inside the sandbox and attaches the real value only to matching outbound requests. Use a preset below or add a custom binding.
+        On an instance that runs the egress broker, {Site.Brand.engine()} replaces each bound credential with a placeholder inside the sandbox and attaches the real value only to matching outbound requests. Use a preset below or add a custom binding.
       </p>
       <ul class="mt-6 flex flex-wrap justify-center gap-2">
         <li
@@ -168,31 +148,13 @@
   </div>
 </section>
 
-<%!-- Outbound. The whole section, not just the card: the heading and the
-      standfirst name the integration too, so a distribution that does not
-      install it has nothing to say here (#1525). --%>
-<section
-  :if={outbound_protocol()}
-  class="bg-[var(--color-bg-1)] border-y border-[var(--color-border)]"
->
-  <div class="max-w-5xl mx-auto px-6 py-16">
-    <h2 class="text-2xl font-semibold text-[var(--color-text-primary)] mb-3 text-center">
-      Put the agent on a Nostr relay.
-    </h2>
-    <p class="text-center text-[var(--color-text-secondary)] max-w-xl mx-auto mb-12">
-      Buzz runs in the other direction. {Site.Brand.name()} hosts the agent and brings its identity to the relay.
-    </p>
-    <.protocol_card protocol={outbound_protocol()} works_label="Shows up in" />
-  </div>
-</section>
-
 <%!-- Footer CTA --%>
 <section class="max-w-5xl mx-auto px-6 py-20 text-center">
   <h2 class="text-2xl sm:text-3xl font-bold text-[var(--color-text-primary)] mb-4">
     Haven't found your tool?
   </h2>
   <p class="text-[var(--color-text-secondary)] mb-8 max-w-lg mx-auto">
-    If it launches an ACP agent, it can connect directly. Otherwise, build against {Site.Brand.name()}'s REST API or an SDK.
+    If it launches an ACP agent, it can connect directly. Otherwise, build against {Site.Brand.name()}'s REST API or the TypeScript SDK.
   </p>
   <div class="flex flex-col sm:flex-row gap-3 justify-center">
     <a
