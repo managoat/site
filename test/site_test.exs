@@ -34,9 +34,8 @@ defmodule SiteTest do
 
   # Fountain retired its OpenAI-compatible and AG-UI endpoints (fountain ADR
   # 0057), and production answers them 404 and 406. A page that still shows one
-  # is an instruction that cannot work. The retirement note on /integrations
-  # names the two protocols in prose and links their migration pages, which is
-  # why this pins the endpoints, the flag and the client package, not the names.
+  # is an instruction that cannot work. This pins the endpoints, the flag and
+  # the client package rather than the names.
   test "no page offers a retired Fountain endpoint", %{pages: pages} do
     for {path, html} <- pages,
         gone <- ["/v1/chat/completions", "/v1/models", "/api/agui", "openai_compat", "@ag-ui/"] do
@@ -65,10 +64,10 @@ defmodule SiteTest do
     site_paths = Enum.map(Site.Build.pages(), & &1.path)
     redirects = Map.keys(Site.Build.redirects())
 
-    # Paths the app on the same host serves: the manual, the auth flow and the
-    # legal pages. The manual's links are checked against the live host by
+    # Paths the app on the same host serves: the manual and the auth flow.
+    # The manual's links are checked against the live host by
     # `mix site.check_links`, not here.
-    app_prefixes = ["/docs", "/auth/", "/terms", "/privacy", "/dashboard", "/api/"]
+    app_prefixes = ["/docs", "/auth/", "/dashboard", "/api/"]
 
     for {path, html} <- pages,
         [href] <- Regex.scan(~r/href="(\/[^"#?]*)/, html, capture: :all_but_first),

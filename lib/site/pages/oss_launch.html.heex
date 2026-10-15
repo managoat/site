@@ -7,7 +7,7 @@
     <div>
       <p class="inline-flex items-center gap-2 rounded-full border border-[var(--color-border-strong)] bg-[var(--color-bg-1)] px-3.5 py-1.5 text-xs font-medium uppercase tracking-[0.16em] text-[var(--color-text-secondary)]">
         <span class="size-1.5 rounded-full bg-[var(--color-accent)]" aria-hidden="true"></span>
-        Open source · self-hosted · AGPL-3.0-or-later
+        Open source · self-hosted · Apache-2.0
       </p>
       <h1 class="mt-6 text-[2.75rem] leading-[1.02] sm:text-6xl font-bold tracking-[-0.035em] text-[var(--color-text-primary)]">
         Give your app a computer it can talk to.
@@ -160,7 +160,7 @@
   </h2>
   <div class="mt-6 max-w-3xl space-y-4 text-lg text-[var(--color-text-secondary)] leading-relaxed">
     <p>
-      Keep it on the screen while engineers steer every move. Put it behind a file upload, a button or an API and return only the result. Let a webhook wake it up when nobody is watching.
+      Keep it on the screen while engineers steer every move. Put it behind a file upload, a button or an API and return only the result. Start it from a webhook handler or a cron job of yours when nobody is watching.
     </p>
     <p>
       These look like different products to the customer. Underneath, they all need the same thing: a machine that can pick up a conversation and keep working after you close your laptop.
@@ -197,7 +197,7 @@
         Start work from anything.
       </h3>
       <p class="mt-2 text-sm leading-relaxed text-[var(--color-text-secondary)]">
-        A webhook, cron job, CI run or another agent can start a conversation and follow it to the result.
+        A webhook handler, cron job, CI run or another agent can start a conversation and follow it to the result.
       </p>
     </article>
   </div>
@@ -283,7 +283,7 @@
     Talk to it from whatever you are building.
   </h2>
   <p class="mt-4 max-w-2xl text-[var(--color-text-secondary)] leading-relaxed">
-    Use Fountain’s API and SDKs in your product, or plug into editors and chat apps over ACP. Every door reaches the same agents, conversations and event stream.
+    Use Fountain’s API and TypeScript SDK in your product, or plug into editors and chat apps over ACP. Every door reaches the same agents, conversations and event stream.
   </p>
 
   <div class="mt-10 grid sm:grid-cols-2 gap-px overflow-hidden rounded-xl border border-[var(--color-border)] bg-[var(--color-border)]">
@@ -300,7 +300,7 @@
   </div>
 
   <%!-- The choices behind every door, as parallel columns: the mark names the
-        third party. Sprites, E2B and Daytona are custom marks in
+        third party. Sprites and E2B are custom marks in
         MarketingIcons (Simple Icons lacks them). Same data as /integrations. --%>
   <div class="mt-6 grid md:grid-cols-3 gap-6" data-role="inside-groups">
     <div
@@ -328,10 +328,10 @@
           Tools and systems
         </p>
         <h3 class="mt-3 text-xl font-semibold text-[var(--color-text-primary)]">
-          MCP inside. Webhooks outside.
+          MCP servers in, credentials kept out.
         </h3>
         <p class="mt-3 text-sm leading-relaxed text-[var(--color-text-secondary)]">
-          Attach any stdio or HTTP MCP server. Use built-in credential bindings to keep provider tokens out of the sandbox.
+          Attach any stdio or HTTP MCP server. On an instance that runs the egress broker, bind a provider token to its service and the sandbox holds only a placeholder.
         </p>
       </div>
       <div class="flex flex-wrap gap-2">
@@ -473,7 +473,7 @@
         Fork it. Extend it. Build the thing only you would build.
       </h2>
       <p class="mt-4 max-w-2xl text-[var(--color-text-secondary)] leading-relaxed">
-        Host the apps and API yourself. Keep conversations and configuration in your Postgres. Hold the encryption keys. Run sandboxes through Sprites, E2B, Daytona or machines on your own network. The engine and apps are open for you to take apart and reshape.
+        Host the apps and API yourself. Keep conversations and configuration in your Postgres. Hold the encryption keys. Run sandboxes through Sprites or E2B under your own account. The engine and apps are open for you to take apart and reshape.
       </p>
     </div>
     <div class="flex flex-col sm:flex-row lg:flex-col gap-3 lg:min-w-52">

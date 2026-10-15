@@ -13,14 +13,6 @@ defmodule Site.Pages do
   embed_templates("pages/*")
 
   @doc """
-  Whether content that needs an extension has one to talk about. The app
-  answers this from its installed set (`Fountain.Marketing.available?/1`,
-  #1525) so a core distribution does not sell `/api/buzz`. The hosted instance
-  bundles every extension, so here the answer is always yes.
-  """
-  def available?(_extension), do: true
-
-  @doc """
   The homepage's section mark: a short accent rule and a one-word label.
 
   The page is ten sections of argument and every one of them used to open with
@@ -299,13 +291,13 @@ defmodule Site.Pages do
   #   conversations/redaction.ex                the 8-byte literal match
   #   cross_tenant_isolation_test.exs           the scoping guardrail
   #   decisions/0013-audit-trail.md             what is recorded, and what is not
-  #   docs/concepts/permissions.md              `ask`, and opencode's 422
+  #   docs/concepts/permissions.md              `ask`, and what each runtime asks about
   #   workers/retention_pruner.ex               the retention windows
   #   decisions/0009 + account deletion         export, deletion, crypto-shred
   #
-  # The egress broker (ADR 0019) is deliberately absent. Its status is
-  # Proposed and it runs for one account, so it belongs in `security_absent/0`
-  # rather than in an answer.
+  # The egress broker (ADR 0019) is deliberately absent. It is off until an
+  # operator configures it, so it belongs in `security_absent/0` rather than in
+  # an answer.
 
   @doc "The questions a security reviewer asks, and the mechanism that answers each."
   def security_answers do
@@ -373,20 +365,19 @@ defmodule Site.Pages do
             "uses. Build the last gate somewhere the agent cannot reach, so refusing " <>
             "is somebody else's job rather than the model's.",
         limit:
-          "Asking is not the default, and it is not universal. claude, codex and gemini " <>
-            "enforce it. opencode cannot, and refuses anything stricter than auto-allow " <>
-            "with a 422 rather than pretending to hold the line."
+          "Asking is not the default, and it is not universal. Each runtime decides " <>
+            "which tool calls it asks about, and a policy answers only the ones it is " <>
+            "asked."
       },
       %{
         question: "What if none of this may leave our network?",
         answer:
-          "Run the server yourself, or keep the platform and put the sandboxes on your " <>
-            "own hardware with a runner. Either way the code and the secrets stay inside " <>
-            "your perimeter.",
+          "Run the server yourself. The control plane, the transcripts, the audit trail " <>
+            "and the encrypted secrets then live in your deployment and your Postgres.",
         limit:
-          "Read the runner's trust model first. It runs in trusted mode, the agent's " <>
-            "processes run as the daemon's user, and no container or VM stands between " <>
-            "them. An opt-in Firecracker backend exists and is not the default."
+          "The sandboxes still run at a hosted provider, Sprites or E2B. Fountain no " <>
+            "longer runs agents on hardware you own, so the repositories and credentials " <>
+            "a run uses reach that provider."
       }
     ]
   end
@@ -411,9 +402,9 @@ defmodule Site.Pages do
         "and a team shares one or runs an instance of its own.",
       "No independent penetration test. The security work in the repo is the " <>
         "security work there is, and it is open source, so you can read all of it.",
-      "The egress broker that keeps a credential out of the sandbox entirely is " <>
-        "built and running for one account. It is not something you can turn on yet, " <>
-        "so assume the sandbox holds the values you give it."
+      "The egress broker that keeps a credential out of the sandbox entirely is off " <>
+        "until the operator configures it. On an instance without it, assume the " <>
+        "sandbox holds the values you give it."
     ]
   end
 
@@ -491,29 +482,7 @@ defmodule Site.Pages do
   end
 
   @doc "The protocol integrations this page describes."
-  def protocols, do: protocols(all_protocols())
-
-  @doc """
-  See `protocols/0`. Takes the catalogue, so a test can pass one in.
-  """
-  def protocols(cards) when is_list(cards) do
-    cards
-    |> Enum.filter(&Site.Pages.available?(&1[:requires_extension]))
-    |> Enum.map(fn card ->
-      Map.update(card, :works_with, [], fn rows ->
-        Enum.filter(rows, &Site.Pages.available?(&1[:requires_extension]))
-      end)
-    end)
-  end
-
-  @doc """
-  Every protocol card, whatever this distribution installs.
-
-  `protocols/0` is what pages render. This is the catalogue behind it, and the
-  only legitimate readers are the tests that check the filter actually removes
-  something — a filter over a list with nothing to remove passes either way.
-  """
-  def all_protocols do
+  def protocols do
     [
       %{
         id: "acp",
@@ -560,46 +529,41 @@ defmodule Site.Pages do
         name: "MCP",
         long: "Model Context Protocol, both ways",
         surface: "Any MCP server, on any agent",
-        # No count and no list in the prose. Both are distribution-dependent
-        # (#1525): core hosts gmail, and each
-        # installed extension may add its own, so a number here is wrong on one
-        # image or the other. The `works_with` rows below say which, and they
-        # are filtered by what is installed.
-        direction: "Agents call the servers you name; Fountain hosts some of its own.",
+        # Fountain hosts no MCP server of its own (docs/catalog/mcp-servers):
+        # Connections and the Buzz extension, which used to add servers here,
+        # were removed.
+        direction: "Agents call the servers you name. Fountain hosts none of its own.",
         pitch:
           "Give each Fountain agent the stdio or HTTP MCP servers it needs. Fountain " <>
-            "passes their declarations to the runtime without curating them. With a " <>
-            "brokered Gmail Connection, the sandbox gets inbox tools without receiving " <>
-            "the OAuth token. Fountain also serves MCP tools of its own, listed below.",
+            "passes their declarations to the runtime without curating them, and fills " <>
+            "each ${VAR} in their config from the agent's environment and vault.",
         docs: "/docs/catalog/mcp-servers",
-        docs_label: "The MCP servers Fountain hosts",
+        docs_label: "Declare MCP servers",
         works_with: [
-          %{name: "Gmail", slug: "gmail", note: "a Connection, then the inbox as seven tools"},
           %{
-            name: "fountain-buzz",
-            slug: nil,
-            requires_extension: :buzz,
-            note: "post to a Buzz channel as the agent"
-          },
-          %{
-            name: "Any stdio or HTTP server",
+            name: "Any stdio server",
             slug: nil,
             note: "named on the agent, run in its sandbox"
+          },
+          %{
+            name: "Any remote HTTP server",
+            slug: nil,
+            note: "a url and headers, its token from a vault"
           }
         ]
       },
       %{
         id: "api",
         kind: :client,
-        name: "REST, SSE and webhooks",
+        name: "REST and SSE",
         long: "Fountain's own API",
-        surface: "/api, with TypeScript and Python SDKs and a CLI",
+        surface: "/api, with a TypeScript SDK and a CLI",
         direction: "Your code drives everything the console can, and more.",
         pitch:
           "Start and follow agents from your own code. Create a Conversation, send a " <>
-            "prompt, stream the parsed blocks or receive a signed webhook when the turn " <>
-            "ends. Sign in with Fountain gives browser apps an OAuth flow. The apps this " <>
-            "project ships use the same public API and SDKs.",
+            "prompt and stream the parsed blocks until the turn ends. Sign in with " <>
+            "Fountain gives browser apps an OAuth flow. The apps this project ships use " <>
+            "the same public API and SDK.",
         docs: "/docs/api",
         docs_label: "The API reference",
         works_with: [
@@ -610,12 +574,11 @@ defmodule Site.Pages do
           },
           %{name: "Workbench", slug: nil, note: "the shared engineering workbench"},
           %{name: "TypeScript", slug: "typescript", note: "@managoat/fountain-sdk on npm"},
-          %{name: "Python", slug: "python", note: "fountain-agent-sdk on PyPI"},
           %{name: "Go", slug: "go", note: "the fountain CLI, and its source"},
           %{
             name: "GitHub Actions",
             slug: "githubactions",
-            note: "a webhook, or the CLI in a step"
+            note: "the CLI in a step"
           },
           %{name: "React", slug: "react", note: "a static app on Sign in with Fountain"},
           %{name: "Claude Code", slug: "claudecode", note: "the /skill file teaches it the API"},
@@ -627,29 +590,6 @@ defmodule Site.Pages do
           },
           %{name: "curl", slug: "curl", note: "everything the SDK does"}
         ]
-      },
-      %{
-        id: "nostr",
-        kind: :outbound,
-        name: "Nostr",
-        long: "Buzz, the other direction",
-        surface: "POST /api/buzz/agents",
-        requires_extension: :buzz,
-        direction: "Outbound. Fountain hosts the agent and shows up on the relay.",
-        pitch:
-          "Run a Buzz identity on Fountain instead of your laptop. It holds presence on " <>
-            "the relay, answers a mention from its sandbox and keeps its signing key on " <>
-            "the server.",
-        # The extension's page (#1510), which is safe to name again now that
-        # `requires_extension` keeps this card out of a distribution that does
-        # not serve it (#1525). `marketing_controller_test.exs` checks every
-        # rendered `docs:` against `Fountain.Manual` rather than trusting that.
-        docs: "/docs/integrations/buzz",
-        docs_label: "Buzz on Fountain",
-        works_with: [
-          %{name: "Buzz", slug: nil, note: "provision from the desktop, or the API"},
-          %{name: "Nostr relays", slug: nil, note: "group channels, presence, mentions"}
-        ]
       }
     ]
   end
@@ -659,9 +599,6 @@ defmodule Site.Pages do
 
   @doc "The protocol an agent uses to reach its tools."
   def tool_protocol, do: Enum.find(protocols(), &(&1.kind == :tool))
-
-  @doc "The integration where Fountain brings the agent to another network."
-  def outbound_protocol, do: Enum.find(protocols(), &(&1.kind == :outbound))
 
   @doc """
   What runs behind an integration, split into choices the developer makes.
@@ -678,8 +615,7 @@ defmodule Site.Pages do
         items: [
           %{name: "Claude Code", slug: "claudecode"},
           %{name: "Codex", slug: "openai"},
-          %{name: "Gemini CLI", slug: "googlegemini"},
-          %{name: "OpenCode", slug: "opencode"}
+          %{name: "Gemini CLI", slug: "googlegemini"}
         ]
       },
       %{
@@ -697,13 +633,10 @@ defmodule Site.Pages do
       %{
         title: "Sandboxes",
         pitch: "Run on the sandbox you choose.",
-        blurb:
-          "Where the agent runs. A hosted provider, or a runner on hardware you own that dials out over WebSocket.",
+        blurb: "Where the agent runs: a sandbox provider your instance holds a token for.",
         items: [
           %{name: "Sprites", slug: "sprites"},
-          %{name: "E2B", slug: "e2b"},
-          %{name: "Daytona", slug: "daytona"},
-          %{name: "Your own machine", slug: "terminal"}
+          %{name: "E2B", slug: "e2b"}
         ]
       }
     ]
@@ -855,17 +788,18 @@ defmodule Site.Pages do
       %{
         id: "pipeline",
         have: "A pipeline",
-        want: "Start a run from CI, hear about it when it ends.",
-        how: "The CLI in a step, a signed webhook to a URL you own.",
+        want: "Start a run from CI and keep the step until it ends.",
+        how:
+          "The CLI in a step. fountain run streams the turn and returns when it ends; reattach to a dropped stream by id.",
         lang: "bash",
-        docs: "/docs/reference/webhooks",
-        # Both commands are real. An earlier draft ran `fountain conversations
-        # create --external-id`, and neither the command nor the flag exists.
+        docs: "/docs/cli",
+        # Both commands are real (docs/cli.md). Fountain removed its outbound
+        # webhooks, so the step waits on the stream instead.
         code: """
-        fountain run reviewer --prompt "Review PR #$PR"
+        fountain run reviewer -p "Review PR #$PR"
 
-        fountain webhooks create https://example.com/hooks/fountain \\
-          --event conversation.turn.done --event conversation.turn.failed
+        # a dropped connection loses nothing; reattach by id
+        fountain conv stream <conversation-id>
         """
       },
       %{
@@ -1263,22 +1197,14 @@ defmodule Site.Pages do
   end
 
   @doc """
-  The features that ship behind configuration, and what each takes to turn on
-  in an instance of your own. The rows track `docs/reference/feature-status.md`; a
-  feature that comes off that page comes off this one. Two have: teammate email
-  and phone was removed, and the OpenAI-compatible API was retired with its
-  `openai_compat` flag (fountain ADR 0057).
+  The capabilities that ship switched off, and what each takes to turn on in
+  an instance of your own. The rows track `docs/reference/feature-status.md`; a
+  feature that comes off that page comes off this one. Several have: teammate
+  email and phone, the OpenAI-compatible API (fountain ADR 0057) and
+  Connections were all removed, which leaves the broker.
   """
   def rationed_features do
     [
-      %{
-        name: "Connections",
-        blurb:
-          "Sign in to a provider once and the agent gets its tools. The OAuth token never enters the sandbox.",
-        yours:
-          "Configure the credential broker and your provider apps, then add connections to FEATURE_FLAGS_ON.",
-        docs: "/docs/catalog/connections"
-      },
       %{
         name: "Brokered credentials",
         blurb:
@@ -1296,20 +1222,13 @@ defmodule Site.Pages do
       %{
         part: "The server",
         scope: "apps/fountain",
-        licence: "AGPL-3.0-or-later",
+        licence: "Apache-2.0",
         means:
-          "Run it, change it, host it, charge for it. Offer a changed server to other people over a network and they have a right to your source."
+          "Run it, change it, host it, ship it in a closed product. Keep the license and notices when you redistribute it."
       },
       %{
-        part: "Credits and Stripe",
-        scope: "ee/",
-        licence: "Elastic 2.0",
-        means:
-          "Free to run in your own instance, and your changes stay yours. The one thing it forbids is selling this code to third parties as a hosted service."
-      },
-      %{
-        part: "The CLI and the SDKs",
-        scope: "cli/, sdk/typescript, sdk/python",
+        part: "The CLI and the SDK",
+        scope: "cli/, sdk/typescript",
         licence: "Apache-2.0",
         means:
           "Ship them inside a closed product. An application that calls your instance takes on no obligation at all."
@@ -1333,10 +1252,10 @@ defmodule Site.Pages do
           "You generate the key that encrypts every tenant's environment variables. Fountain never stores it in Postgres, so back it up with the database."
       },
       %{
-        status: "Hosted or yours",
+        status: "Your sandbox account",
         title: "Sandbox compute",
         body:
-          "Use a hosted sandbox provider or connect a Mac mini, home server or GPU box from your network. The runner dials out, so you open no inbound port and hand it no platform credential."
+          "Sandboxes run at Sprites or E2B under a token your instance holds. The provider bills you for the machines, and Fountain parks them between messages."
       },
       %{
         status: "Your provider account",
@@ -1354,16 +1273,16 @@ defmodule Site.Pages do
   def self_host_costs do
     [
       %{
-        title: "Bring machines or choose a sandbox provider",
+        title: "Choose a sandbox provider",
         body:
-          "Sprites, E2B and Daytona are all hosted. Daytona you can run yourself, and your own runners need no vendor at all. Pick one before your first conversation, because without one every conversation fails.",
-        docs: "/docs/integrations/runners",
-        docs_label: "Runners on your own hardware"
+          "Sprites and E2B are both hosted, and each needs an account and a token of yours. Pick one before your first conversation, because without one every conversation fails.",
+        docs: "/docs/concepts/sandboxes",
+        docs_label: "About sandboxes"
       },
       %{
         title: "Configure email before inviting anyone",
         body:
-          "Verification and password resets go through Resend, or an SMTP server of yours. So does anything a teammate sends. The compose defaults skip delivery so the first account can register, and that default is for day one only.",
+          "Verification and password resets go through Resend, or an SMTP server of yours. The compose defaults skip delivery so the first account can register, and that default is for day one only.",
         docs: "/docs/guides/operate/email",
         docs_label: "Configure email"
       },
@@ -1390,22 +1309,22 @@ defmodule Site.Pages do
       %{
         q: "Is it really the same code?",
         a:
-          "The same image and the same manifests. Every merge publishes deploy/ as an OCI artifact, and the hosted instance deploys from that artifact. There is no private overlay, and no patch that only we have."
+          "The same image and the same manifests. Every merge publishes deploy/ as an OCI artifact, and the maintainer's instance deploys from that artifact. There is no private overlay, and no patch that only we have."
       },
       %{
-        q: "Does the AGPL reach my application?",
+        q: "Does the license reach my application?",
         a:
-          "No. Your application talks to your instance over HTTP, and the CLI and the SDK are Apache-2.0 for exactly that reason. The copyleft has one target: somebody who changes the server and then offers the changed server to other people as a service."
+          "No. The server, the CLI and the SDK are all Apache-2.0, so calling your instance, or changing the server and hosting it, puts no copyleft obligation on you. Keep the license and notices when you redistribute it."
       },
       %{
         q: "What do I pay for the software?",
         a:
-          "Nothing. There is no license key and no seat count, and nobody has to talk to us first. Leave credits off and the instance prices nothing and shows nobody a bill. Turn credits on and it bills your users rather than you."
+          "Nothing. There is no license key and no seat count, and nobody has to talk to us first. The instance prices nothing and shows nobody a bill."
       },
       %{
         q: "Do I still bring a model key?",
         a:
-          "Yes, and you always did. The agent bills your Anthropic, OpenAI or Google account for tokens. Nothing in the middle takes a cut of inference, hosted or not."
+          "Yes, and you always did. The agent bills your Anthropic, OpenAI or Google account for tokens. Nothing in the middle takes a cut of inference."
       },
       %{
         q: "How do I get rid of it?",
@@ -1536,7 +1455,7 @@ defmodule Site.Pages do
         "#{Site.Brand.engine()} is open source"
       end
 
-    "Yes. #{lead}, and you can run it on your own hardware, with your own sandboxes."
+    "Yes. #{lead}, and you can run it on your own infrastructure, with your own sandbox provider account."
   end
 
   @doc """

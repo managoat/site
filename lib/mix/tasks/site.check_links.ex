@@ -10,7 +10,7 @@ defmodule Mix.Tasks.Site.CheckLinks do
   """
   use Mix.Task
 
-  @app_prefixes ["/docs", "/auth/", "/terms", "/privacy"]
+  @app_prefixes ["/docs", "/auth/"]
 
   @impl true
   def run(args) do

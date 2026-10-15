@@ -35,7 +35,7 @@
       </a>
     </div>
     <p class="mt-6 flex flex-wrap gap-x-3 gap-y-1 font-mono text-xs text-[var(--color-text-secondary)]">
-      <span>AGPL-3.0-or-later</span>
+      <span>Apache-2.0</span>
       <span aria-hidden="true">·</span>
       <span>same release image</span>
       <span aria-hidden="true">·</span>
@@ -80,7 +80,7 @@
       <strong class="font-semibold text-[var(--color-text-primary)]">
         Prefer Kubernetes?
       </strong>
-      Use the plain manifests in <code class="text-xs text-[var(--color-code-text)] bg-[var(--color-code-bg)] rounded px-1.5 py-0.5">deploy/k8s/</code>—no operator or CRDs. They deploy the same release image as hosted Fountain against your Postgres.
+      Use the plain manifests in <code class="text-xs text-[var(--color-code-text)] bg-[var(--color-code-bg)] rounded px-1.5 py-0.5">deploy/k8s/</code>—no operator or CRDs. They deploy the same release image the maintainer's instance runs, against your Postgres.
       <a
         href="/docs/guides/operate/kubernetes"
         class="underline underline-offset-2 hover:text-[var(--color-text-primary)]"
@@ -101,7 +101,7 @@
       Run the control plane. Choose where the work runs.
     </h2>
     <p class="mt-4 text-[var(--color-text-secondary)] leading-relaxed max-w-[68ch]">
-      Fountain and Postgres run in your account, protected by a master key you hold. Use a hosted sandbox provider or connect machines from your network. Each user brings their own model credential, and Fountain never marks up inference.
+      Fountain and Postgres run in your account, protected by a master key you hold. Sandboxes run at the provider you choose, under your own token. Each user brings their own model credential, and Fountain never marks up inference.
     </p>
     <dl class="mt-8 sm:mt-10 grid sm:grid-cols-2 gap-6">
       <div
@@ -124,10 +124,10 @@
     </dl>
     <p class="mt-8 text-sm">
       <a
-        href="/docs/integrations/runners"
+        href="/docs/concepts/sandboxes"
         class="font-medium text-[var(--color-text-primary)] underline underline-offset-2 hover:text-[var(--color-brand)]"
       >
-        Run sandboxes on your own machines →
+        How sandboxes work →
       </a>
     </p>
   </div>
@@ -329,15 +329,17 @@
   </p>
 </section>
 
-<%!-- 05. The flagged features, as a table: the config column is the page's
-      point, so it gets a column of its own and a tint. The rows track docs/reference/feature-status.md. --%>
+<%!-- 05. What ships switched off, as a table: the config column is the
+      page's point, so it gets a column of its own and a tint. The rows track
+      docs/reference/feature-status.md, which since Connections were removed
+      names the broker alone. --%>
 <section class="max-w-6xl mx-auto px-5 sm:px-6 py-12 sm:py-16">
-  <.eyebrow label="05 · Feature flags" align={:left} />
+  <.eyebrow label="05 · Off by default" align={:left} />
   <h2 class="mt-3 text-3xl font-bold tracking-tight text-[var(--color-text-primary)]">
-    On your instance, every feature flag is yours to set.
+    One capability waits for your configuration.
   </h2>
   <p class="mt-4 text-[var(--color-text-secondary)] leading-relaxed max-w-[64ch]">
-    Two capabilities ship behind configuration: Connections and the credential broker. On your instance, each is a switch you control.
+    Every feature is on for every account. The credential broker is the exception: it needs a listener of its own, so it stays off until you configure it.
   </p>
   <div class="mt-8 overflow-hidden rounded-xl border border-[var(--color-border)]">
     <div class="hidden md:grid md:grid-cols-[1.5fr_1.25fr] bg-[var(--color-bg-2)] border-b border-[var(--color-border)] text-xs font-medium uppercase tracking-wide text-[var(--color-text-muted)]">
@@ -374,28 +376,28 @@
     </div>
   </div>
   <p class="mt-6 text-sm text-[var(--color-text-secondary)] leading-relaxed max-w-[72ch]">
-    The rest of the product has no flag on it. Every switch the release image reads is in the
+    The
     <a
       href="/docs/configuration"
       class="underline underline-offset-2 hover:text-[var(--color-text-primary)]"
     >
       configuration reference
     </a>
-    lists every one of them.
+    lists every setting the release image reads.
   </p>
 </section>
 
 <%!-- 06. Licenses --%>
 <section class="bg-[var(--color-bg-1)] border-y border-[var(--color-border)]">
   <div class="max-w-6xl mx-auto px-5 sm:px-6 py-12 sm:py-16">
-    <.eyebrow label="06 · Licenses" align={:left} />
+    <.eyebrow label="06 · License" align={:left} />
     <h2 class="mt-3 text-3xl font-bold tracking-tight text-[var(--color-text-primary)]">
-      Three licenses, and what each one asks of you.
+      One license, on the server and the clients.
     </h2>
     <p class="mt-4 text-[var(--color-text-secondary)] leading-relaxed max-w-[62ch]">
-      The parts your code touches are permissive on purpose. A connection to {Site.Brand.engine()} must never put an obligation on your application.
+      Everything is Apache-2.0. A connection to {Site.Brand.engine()}, or a changed server you host, puts no copyleft obligation on you. Earlier server releases were AGPL-3.0-or-later and stay so for anyone who has them.
     </p>
-    <div class="grid md:grid-cols-3 gap-6 mt-8">
+    <div class="grid md:grid-cols-2 gap-6 mt-8">
       <div
         :for={part <- licence_parts()}
         class="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-0)] p-5 sm:p-6 flex flex-col"
@@ -466,7 +468,7 @@
       Read the questions before you clone.
     </h2>
     <p class="mt-4 max-w-[58ch] text-[var(--color-text-secondary)] leading-relaxed">
-      Check whether it is the same code, whether the AGPL reaches your application, what the software costs and how to remove it again.
+      Check whether it is the same code, whether the license reaches your application, what the software costs and how to remove it again.
     </p>
     <a
       href="/faq#self-hosting"
