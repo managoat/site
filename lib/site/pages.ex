@@ -561,11 +561,11 @@ defmodule Site.Pages do
         long: "Model Context Protocol, both ways",
         surface: "Any MCP server, on any agent",
         # No count and no list in the prose. Both are distribution-dependent
-        # (#1525): core hosts team and gmail, and each
+        # (#1525): core hosts gmail, and each
         # installed extension may add its own, so a number here is wrong on one
         # image or the other. The `works_with` rows below say which, and they
         # are filtered by what is installed.
-        direction: "Agents call the servers you name; Fountain hosts several of its own.",
+        direction: "Agents call the servers you name; Fountain hosts some of its own.",
         pitch:
           "Give each Fountain agent the stdio or HTTP MCP servers it needs. Fountain " <>
             "passes their declarations to the runtime without curating them. With a " <>
@@ -575,11 +575,6 @@ defmodule Site.Pages do
         docs_label: "The MCP servers Fountain hosts",
         works_with: [
           %{name: "Gmail", slug: "gmail", note: "a Connection, then the inbox as seven tools"},
-          %{
-            name: "fountain-team",
-            slug: nil,
-            note: "message a teammate, from inside the sandbox"
-          },
           %{
             name: "fountain-buzz",
             slug: nil,
@@ -613,7 +608,6 @@ defmodule Site.Pages do
             slug: nil,
             note: "the chat app we ship, static files on the SDK"
           },
-          %{name: "Team", slug: nil, note: "the team messenger, on the same public API"},
           %{name: "Workbench", slug: nil, note: "the shared engineering workbench"},
           %{name: "TypeScript", slug: "typescript", note: "@managoat/fountain-sdk on npm"},
           %{name: "Python", slug: "python", note: "fountain-agent-sdk on PyPI"},
@@ -901,7 +895,7 @@ defmodule Site.Pages do
   # that cannot be clicked. The controller test asserts both are absolute and
   # that no app is listed twice.
   #
-  # The first group holds the three flagship apps, and they lead every page
+  # The first group holds the flagship apps, and they lead every page
   # that shows the roster. An app in it carries a `:flagship` key holding the
   # lines its featured cards add: a short homepage description, what it is
   # like, and who it is for. That key is what `flagship_apps/0` selects on, so
@@ -913,9 +907,9 @@ defmodule Site.Pages do
     [
       %{
         id: "flagship",
-        title: "Three ways to work with your agents",
+        title: "Two ways to work with your agents",
         blurb:
-          "Fountain's web UI is the operator console for accounts, keys, agents, environments and audit. These three apps are working surfaces built on the same public API available to your product.",
+          "Fountain's web UI is the operator console for accounts, keys, agents, environments and audit. These two apps are working surfaces built on the same public API available to your product.",
         apps: [
           %{
             id: "fountain-conversations",
@@ -937,27 +931,6 @@ defmodule Site.Pages do
               homepage: "Run an agent and watch every step.",
               like: "A coding-agent chat with its checkout, shell and event stream visible.",
               who: "Start here to see one run from first prompt to final response."
-            }
-          },
-          %{
-            id: "fountain-team",
-            glyph: "\u{1F465}",
-            name: "Team",
-            host: "fountain-team.demo.managoat.com",
-            url: "https://fountain-team.demo.managoat.com/",
-            source: "https://github.com/managoat/demos/tree/main/apps/fountain-team",
-            screenshot: %{
-              src: "/site/images/apps/team.jpg",
-              alt:
-                "Team with Builder, Reviewer, and Researcher in the roster and Builder’s thread open"
-            },
-            blurb:
-              "Message your agents as teammates. Keep a roster beside the thread, schedule recurring routines, attach images and search the conversation history.",
-            shows: "the team API, SSE streaming, schedules and usage",
-            flagship: %{
-              homepage: "Message your agents like teammates.",
-              like: "A team messenger whose contacts are agents you configured.",
-              who: "Use it when a thread is the natural place to hand off work."
             }
           },
           %{
@@ -1058,20 +1031,8 @@ defmodule Site.Pages do
         id: "infrastructure",
         title: "Infrastructure operations",
         blurb:
-          "These apps monitor and repair systems with tools scoped to the job. A scheduled run can decide that nothing needs doing.",
+          "Repair systems with tools scoped to the job, and take the result back as one reviewable patch.",
         apps: [
-          %{
-            id: "watchtower",
-            glyph: "\u{1F5FC}",
-            name: "Watchtower",
-            host: "watchtower.demo.managoat.com",
-            url: "https://watchtower.demo.managoat.com",
-            source: "https://github.com/managoat/demos/tree/main/apps/watchtower",
-            blurb:
-              "A scheduled SRE agent monitors uptime, latency, TLS expiry and DNS for every site you name. When a tile turns red, ask it to investigate with its tools.",
-            shows:
-              "scheduled runs, tool-backed investigation and conversations as durable history"
-          },
           %{
             id: "mend",
             glyph: "\u{1F526}",
@@ -1082,17 +1043,6 @@ defmodule Site.Pages do
             blurb:
               "Mend audits CI, manifests, Dockerfiles and cloud templates. It applies mechanical fixes, explains judgment calls and returns one patch.",
             shows: "a real CLI in the sandbox and ambiguous findings left for review"
-          },
-          %{
-            id: "rounds",
-            glyph: "\u{1F501}",
-            name: "Rounds",
-            host: "rounds.demo.managoat.com",
-            url: "https://rounds.demo.managoat.com",
-            source: "https://github.com/managoat/demos/tree/main/apps/rounds",
-            blurb:
-              "Dependabot for infrastructure config. Rounds audits an enrolled repository on a schedule, fixes what it can verify and opens a pull request without repeating closed findings.",
-            shows: "an unattended workflow and an agent that knows when to do nothing"
           }
         ]
       },
@@ -1121,7 +1071,7 @@ defmodule Site.Pages do
   def built_apps_flat, do: Enum.flat_map(built_apps(), & &1.apps)
 
   @doc """
-  The three flagship applications, in the order every page shows them.
+  The flagship applications, in the order every page shows them.
   Selected out of `built_apps/0` rather than restated, so a flagship card
   cannot drift from its roster entry.
   """
@@ -1130,7 +1080,7 @@ defmodule Site.Pages do
   @doc "The group the flagship apps sit in, for the heading above their cards."
   def flagship_group, do: Enum.find(built_apps(), &(&1.id == "flagship"))
 
-  @doc "The rest of the roster, which /built-with lists under the featured three."
+  @doc "The rest of the roster, which /built-with lists under the featured apps."
   def other_app_groups, do: Enum.reject(built_apps(), &(&1.id == "flagship"))
 
   ## /self-hosted
@@ -1233,15 +1183,15 @@ defmodule Site.Pages do
 
   # The four apps /self-hosted shows, chosen for four different shapes of
   # front door: a commission that comes back as a document, an analyst behind a
-  # file upload, an unattended repair loop, and a fan-out. Selected from
+  # file upload, a repair that comes back as one patch, and a fan-out. Selected from
   # `built_apps/0` by id rather than restated, so a card here cannot drift from
   # /built-with, and an app that is renamed or retired there raises at render
   # instead of linking nowhere — which is exactly what dropping Reflex from the
   # roster did to this list, and why briefing-room now holds the first slot.
-  # The flagship three are deliberately not here because the same page shows
+  # The flagship apps are deliberately not here because the same page shows
   # them above as the front ends an instance gets. The showcase adds four
   # different product shapes without repeating those cards.
-  @showcase_ids ~w(briefing-room table-talk rounds mission-control)
+  @showcase_ids ~w(briefing-room table-talk mend mission-control)
 
   @doc """
   Four applications /self-hosted shows as different frontends over the same
