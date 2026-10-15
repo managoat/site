@@ -86,7 +86,7 @@ defmodule SiteTest do
       assert File.exists?(Path.join(@out, published)), published
     end
 
-    for path <- ~w(conversations team workbench workbench-mobile) do
+    for path <- ~w(conversations workbench workbench-mobile) do
       assert File.exists?(Path.join(@out, "site/images/apps/#{path}.jpg"))
     end
   end

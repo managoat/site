@@ -239,9 +239,9 @@
       Use the apps or host your own.
     </h2>
     <p class="mt-4 text-[var(--color-text-secondary)] leading-relaxed max-w-[68ch]">
-      Your instance serves an operator console for accounts, keys, agents, environments and audit. Conversations, Team and Workbench are static frontends over the same public API. Point them at your instance or host your own copies.
+      Your instance serves an operator console for accounts, keys, agents, environments and audit. Conversations and Workbench are static frontends over the same public API. Point them at your instance or host your own copies.
     </p>
-    <div class="grid md:grid-cols-3 gap-6 mt-8">
+    <div class="grid md:grid-cols-2 gap-6 mt-8">
       <article
         :for={app <- flagship_apps()}
         class="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-0)] p-5 sm:p-6 flex flex-col"
@@ -279,13 +279,10 @@
       </p>
       <pre class="mt-3 overflow-x-auto rounded-lg bg-[var(--color-code-bg)] p-3 sm:p-4 text-[11px] sm:text-xs text-[var(--color-code-text)]"><code phx-no-format>API_CORS_ORIGINS=https://fountain-conversations.demo.managoat.com</code></pre>
       <p class="mt-3 text-sm text-[var(--color-text-secondary)] leading-relaxed">
-        Conversations and Team are also what the console's own links point at, so <code
+        Conversations is also what the console's own links point at, so <code
           class="text-[var(--color-code-text)] bg-[var(--color-code-bg)] rounded px-1 py-0.5 text-xs"
           phx-no-format
-        >CONVERSATIONS_APP_URL</code> and <code
-          class="text-[var(--color-code-text)] bg-[var(--color-code-bg)] rounded px-1 py-0.5 text-xs"
-          phx-no-format
-        >TEAM_APP_URL</code> swing them to copies you host, and an empty string says this deployment has none. Both are in the <a
+        >CONVERSATIONS_APP_URL</code> swings them to a copy you host, and an empty string says this deployment has none. It is in the <a
           href="/docs/configuration"
           class="underline underline-offset-2 hover:text-[var(--color-text-primary)]"
         >configuration reference</a>.
